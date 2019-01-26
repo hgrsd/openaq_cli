@@ -28,15 +28,13 @@ void api_init(void)
 	initialised = 1;
 }
 
-void fetch_countries(void *response)
+void fetch_data(char *request, void *response)
 {
     CURL *curl_handle;
     CURLcode curl_response;
-    char request[MAX_REQUEST_SIZE];
 
     api_init();
     curl_handle = curl_easy_init();
-    sprintf(request, URL_COUNTRIES, "?limit=200");
     if (curl_handle)
     {
         curl_easy_setopt(curl_handle, CURLOPT_URL, request);
@@ -48,48 +46,25 @@ void fetch_countries(void *response)
         fprintf(stderr, "curl_easy_perform() failed: %s\n", 
                 curl_easy_strerror(curl_response));
     curl_easy_cleanup(curl_handle);
+}
+
+void fetch_countries(void *response)
+{
+    char request[MAX_REQUEST_SIZE];
+    sprintf(request, URL_COUNTRIES, "?limit=200");
+    fetch_data(request, response);
 }
 
 void fetch_cities(char *country, void *response)
 {
-    CURL *curl_handle;
-    CURLcode curl_response;
     char request[MAX_REQUEST_SIZE];
-
-    api_init();
-    curl_handle = curl_easy_init();
     sprintf(request, URL_CITIES, country);
-    if (curl_handle)
-    {
-        curl_easy_setopt(curl_handle, CURLOPT_URL, request);
-        curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_callback);
-        curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, response);
-    }
-    curl_response = curl_easy_perform(curl_handle);
-    if (curl_response != CURLE_OK)
-        fprintf(stderr, "curl_easy_perform() failed: %s\n", 
-                curl_easy_strerror(curl_response));
-    curl_easy_cleanup(curl_handle);
+    fetch_data(request, response);
 }
 
 void fetch_locations_by_city(char *city, void *response)
 {
-    CURL *curl_handle;
-    CURLcode curl_response;
     char request[MAX_REQUEST_SIZE];
-
-    api_init();
-    curl_handle = curl_easy_init();
     sprintf(request, URL_LOCATIONS, city);
-    if (curl_handle)
-    {
-        curl_easy_setopt(curl_handle, CURLOPT_URL, request);
-        curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_callback);
-        curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, response);
-    }
-    curl_response = curl_easy_perform(curl_handle);
-    if (curl_response != CURLE_OK)
-        fprintf(stderr, "curl_easy_perform() failed: %s\n", 
-                curl_easy_strerror(curl_response));
-    curl_easy_cleanup(curl_handle);
+    fetch_data(request, response);
 }

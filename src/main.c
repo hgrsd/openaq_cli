@@ -14,9 +14,7 @@ int main(void)
     init_data(&raw_data);
     
     fetch_cities("NL", &raw_data);
-
     json_extract_cities(raw_data.data);
-
     
     return 0;
 }
