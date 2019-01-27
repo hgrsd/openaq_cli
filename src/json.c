@@ -19,6 +19,7 @@ void json_extract_measurements(char *raw_data, struct measurements *target)
         json_decref(root);
         return;
     }
+
     results = json_object_get(root, "results");
     for (int i = 0; i < json_array_size(results); i++)
     {
@@ -34,6 +35,7 @@ void json_extract_measurements(char *raw_data, struct measurements *target)
             strcpy(target->measurements_array[i].date, json_string_value(date));
             parameter_string = json_string_value(parameter);
             value = json_object_get(measurement_line, "value");
+            
             if (strcmp(parameter_string, "pm25") == 0)
                 target->measurements_array[i].pm25 = json_real_value(value);
             else if (strcmp(parameter_string, "pm10") == 0)
@@ -50,6 +52,7 @@ void json_extract_measurements(char *raw_data, struct measurements *target)
                 target->measurements_array[i].bc = json_real_value(value);
             else
                 printf("Unknown parameter: %s. Ignoring.\n", parameter_string);
+
             json_decref(parameter);
             json_decref(value);
             json_decref(date);

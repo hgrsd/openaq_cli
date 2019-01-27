@@ -13,11 +13,11 @@ int main(void)
     char city[MAX_REQUEST_SIZE];
     char country[3];
 
-    init_data(&raw_data);
     puts("Please enter abbreviation of the country: ");
     scanf("%2s", country);
     while (getchar() != '\n')
         continue;
+    init_data(&raw_data);
     fetch_cities(country, &raw_data);
     json_extract_cities(raw_data.data);
 
