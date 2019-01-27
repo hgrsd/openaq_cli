@@ -96,6 +96,7 @@ void json_extract_measurements(char *raw_data, struct measurements *target)
                 printf("Unknown parameter: %s. Ignoring.\n", parameter_string);
             json_decref(parameter);
             json_decref(value);
+            json_decref(date);
         }
         target->size++;
         json_decref(entry);
