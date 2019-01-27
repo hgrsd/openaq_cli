@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "data.h"
-#include "json.h"
 
 void clear_data(struct response_data *data)
 {

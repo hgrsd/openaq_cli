@@ -3,6 +3,9 @@
 
 #include "json.h"
 
+
+// extracts the JSON data from the raw_data string fetched from the OpenAQ API
+// and stores the measurement data in the struct measurements *target
 void json_extract_measurements(char *raw_data, struct measurements *target)
 {
     json_t *root, *results, *entry, *location, *measurements;
@@ -61,6 +64,8 @@ void json_extract_measurements(char *raw_data, struct measurements *target)
     json_decref(results);
 }
 
+
+// extracts cities from the JSON object in raw_data and lists them
 void json_extract_cities(char *raw_data)
 {
     json_t *root, *results, *entry, *city, *locations;
@@ -89,6 +94,7 @@ void json_extract_cities(char *raw_data)
     json_decref(root);
 }
 
+// extracts locations from the JSON data in raw_data and lists them, including available parameters
 void json_extract_locations(char *raw_data)
 {
     json_t *root, *results, *entry, *location, *parameters, *parameter;
