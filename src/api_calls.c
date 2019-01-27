@@ -40,6 +40,7 @@ void fetch_data(char *request, void *response)
         curl_easy_setopt(curl_handle, CURLOPT_URL, request);
         curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_callback);
         curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, response);
+        curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "Mozilla Firefox");
     }
     curl_response = curl_easy_perform(curl_handle);
     if (curl_response != CURLE_OK)
@@ -66,5 +67,12 @@ void fetch_locations_by_city(char *city, void *response)
 {
     char request[MAX_REQUEST_SIZE];
     sprintf(request, URL_LOCATIONS, city);
+    fetch_data(request, response);
+}
+
+void fetch_latest_by_city(char *city, void *response)
+{
+    char request[MAX_REQUEST_SIZE];
+    sprintf(request, URL_LATEST, city);
     fetch_data(request, response);
 }
