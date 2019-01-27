@@ -35,8 +35,6 @@ void init_data(struct response_data *data);
 void init_measurements(struct measurements *target);
 void print_measurements(struct measurements *source);
 
-void json_extract_cities(char *raw_data);
-void json_extract_locations(char *raw_data);
-void json_extract_measurements(char *raw_data, struct measurements *target);
+
 
 #endif
