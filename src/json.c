@@ -4,8 +4,7 @@
 #include "json.h"
 
 
-// extracts the JSON data from the raw_data string fetched from the OpenAQ API
-// and stores the measurement data in the struct measurements *target
+// extracts the JSON data from raw_data and stores the measurement data in the struct measurements *target
 void json_extract_measurements(char *raw_data, struct measurements *target)
 {
     json_t *root, *results, *entry, *location, *measurements;
