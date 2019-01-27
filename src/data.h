@@ -35,6 +35,4 @@ void init_data(struct response_data *data);
 void init_measurements(struct measurements *target);
 void print_measurements(struct measurements *source);
 
-
-
 #endif
