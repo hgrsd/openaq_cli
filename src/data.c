@@ -79,12 +79,12 @@ void json_extract_cities(char *raw_data)
         locations = json_object_get(entry, "locations");
         printf("%d. %s: %lld location(s).\n", i + 1, 
                 json_string_value(city), json_integer_value(locations));
+        json_decref(entry);
+        json_decref(city);
+        json_decref(locations);
     }
-    json_decref(entry);
-    json_decref(city);
-    json_decref(city);
-    json_decref(locations);
     json_decref(results);
+    json_decref(root);
 }
 
 void json_extract_locations(char *raw_data)
@@ -113,10 +113,10 @@ void json_extract_locations(char *raw_data)
             json_decref(parameter);
         }
         printf("\n");
+        json_decref(entry);
+        json_decref(location);
+        json_decref(parameters);
     }
-    json_decref(entry);
-    json_decref(location);
-    json_decref(parameters);
     json_decref(root);
-    json_decref(parameter);
+    json_decref(results);
 }
