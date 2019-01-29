@@ -5,7 +5,7 @@
 
 
 // extracts the JSON data from raw_data and stores the measurement data in the struct measurements *target
-void json_extract_measurements(char *raw_data, struct measurements *target)
+void json_extract_measurements(char *raw_data, measurements_t *target)
 {
     json_t *root, *results, *entry, *location, *measurements;
     json_t *measurement_line, *parameter, *date, *value;
