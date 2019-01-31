@@ -65,14 +65,25 @@ void fetch_cities(char *country, void *response)
 
 void fetch_locations_by_city(char *city, void *response)
 {
+    CURL *curl_handle; 
+    curl_handle = curl_easy_init();
     char request[MAX_REQUEST_SIZE];
-    sprintf(request, URL_LOCATIONS, city);
+    char *city_urlencoded = curl_easy_escape(curl_handle, city, 0);
+
+    sprintf(request, URL_LOCATIONS, city_urlencoded);
+    curl_easy_cleanup(curl_handle);    
     fetch_data(request, response);
 }
 
 void fetch_latest_by_city(char *city, void *response)
 {
+    CURL *curl_handle;
+    curl_handle = curl_easy_init();
     char request[MAX_REQUEST_SIZE];
-    sprintf(request, URL_LATEST, city);
+    char *city_urlencoded;
+
+    city_urlencoded = curl_easy_escape(curl_handle, city, 0);
+    sprintf(request, URL_LATEST, city_urlencoded);
+    curl_easy_cleanup(curl_handle);
     fetch_data(request, response);
 }

@@ -34,6 +34,9 @@ void init_measurements(measurements_t *target)
 
 void print_measurements(measurements_t *source)
 {
+    if(source->size == 0)
+        puts("No measurements found.");
+
     for (int i = 0; i < source->size; i++)
     {
         printf("\nLocation: \t\t%s\n", source->measurements_array[i].location);
