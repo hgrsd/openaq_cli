@@ -10,7 +10,7 @@ void json_extract_measurements(char *raw_data, struct measurements *target)
     json_t *root, *results, *entry, *location, *measurements;
     json_t *measurement_line, *parameter, *date, *value;
     json_error_t error;
-    char *parameter_string;
+    const char *parameter_string;
 
     root = json_loads(raw_data, 0, &error);
     if (!json_is_object(root))
@@ -52,18 +52,10 @@ void json_extract_measurements(char *raw_data, struct measurements *target)
                 target->measurements_array[i].bc = json_real_value(value);
             else
                 printf("Unknown parameter: %s. Ignoring.\n", parameter_string);
-
-            json_decref(parameter);
-            json_decref(value);
-            json_decref(date);
         }
         target->size++;
-        json_decref(entry);
-        json_decref(location);
-        json_decref(measurements);
     }
     json_decref(root);
-    json_decref(results);
 }
 
 
@@ -88,11 +80,7 @@ void json_extract_cities(char *raw_data)
         locations = json_object_get(entry, "locations");
         printf("%d. %s: %lld location(s).\n", i + 1, 
                 json_string_value(city), json_integer_value(locations));
-        json_decref(entry);
-        json_decref(city);
-        json_decref(locations);
     }
-    json_decref(results);
     json_decref(root);
 }
 
@@ -123,10 +111,6 @@ void json_extract_locations(char *raw_data)
             json_decref(parameter);
         }
         printf("\n");
-        json_decref(entry);
-        json_decref(location);
-        json_decref(parameters);
     }
     json_decref(root);
-    json_decref(results);
 }
