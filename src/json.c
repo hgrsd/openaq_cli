@@ -8,7 +8,7 @@
 void json_extract_measurements(char *raw_data, measurements_t *target)
 {
     json_t *root, *results, *entry, *location, *measurements;
-    json_t *measurement_line, *parameter, *date, *value;
+    json_t *measurement_line, *parameter, *date, *value, *unit;
     json_error_t error;
     const char *parameter_string;
 
@@ -35,21 +35,43 @@ void json_extract_measurements(char *raw_data, measurements_t *target)
             strcpy(target->measurements_array[i].date, json_string_value(date));
             parameter_string = json_string_value(parameter);
             value = json_object_get(measurement_line, "value");
+            unit = json_object_get(measurement_line, "unit");
             
             if (strcmp(parameter_string, "pm25") == 0)
+            {
                 target->measurements_array[i].pm25 = json_real_value(value);
+                strcpy(target->measurements_array[i].pm25_unit, json_string_value(unit));
+            }
             else if (strcmp(parameter_string, "pm10") == 0)
+            {
                 target->measurements_array[i].pm10 = json_real_value(value);
+                strcpy(target->measurements_array[i].pm10_unit, json_string_value(unit));
+            }
             else if (strcmp(parameter_string, "o3") == 0)
+            {
                 target->measurements_array[i].o3 = json_real_value(value);
+                strcpy(target->measurements_array[i].o3_unit, json_string_value(unit));
+            }
             else if (strcmp(parameter_string, "so2") == 0)
+            {
                 target->measurements_array[i].so2 = json_real_value(value);
+                strcpy(target->measurements_array[i].so2_unit, json_string_value(unit));
+            }
             else if (strcmp(parameter_string, "no2") == 0)
+            {
                 target->measurements_array[i].no2 = json_real_value(value);
+                strcpy(target->measurements_array[i].no2_unit, json_string_value(unit));
+            }
             else if (strcmp(parameter_string, "co") == 0)
+            {
                 target->measurements_array[i].co = json_real_value(value);
+                strcpy(target->measurements_array[i].co_unit, json_string_value(unit));
+            }
             else if (strcmp(parameter_string, "bc") == 0)
+            {
                 target->measurements_array[i].bc = json_real_value(value);
+                strcpy(target->measurements_array[i].bc_unit, json_string_value(unit));
+            }
             else
                 printf("Unknown parameter: %s. Ignoring.\n", parameter_string);
         }
@@ -59,7 +81,6 @@ void json_extract_measurements(char *raw_data, measurements_t *target)
 }
 
 
-// extracts cities from the JSON object in raw_data and lists them
 void json_extract_cities(char *raw_data)
 {
     json_t *root, *results, *entry, *city, *locations;
@@ -84,7 +105,6 @@ void json_extract_cities(char *raw_data)
     json_decref(root);
 }
 
-// extracts locations from the JSON data in raw_data and lists them, including available parameters
 void json_extract_locations(char *raw_data)
 {
     json_t *root, *results, *entry, *location, *parameters, *parameter;
@@ -111,6 +131,35 @@ void json_extract_locations(char *raw_data)
             json_decref(parameter);
         }
         printf("\n");
+    }
+    json_decref(root);
+}
+
+void json_extract_countries(char *raw_data)
+{
+    json_t *root, *results, *entry, *country, *country_code, *cities;
+    json_error_t error;
+
+    root = json_loads(raw_data, 0, &error);
+    if (!json_is_object(root))
+    {
+        puts("error");
+        json_decref(root);
+        return;
+    }
+    results = json_object_get(root, "results");
+    for (int i = 0; i < json_array_size(results); i++)
+    {
+        entry = json_array_get(results, i);
+        country = json_object_get(entry, "name");
+        country_code = json_object_get(entry, "code");
+        cities = json_object_get(entry, "cities");
+        printf("%4d. %2s - %45s (%lld cities)\n", 
+                i + 1, 
+                json_string_value(country_code), 
+                json_string_value(country),
+                json_integer_value(cities));
+        
     }
     json_decref(root);
 }

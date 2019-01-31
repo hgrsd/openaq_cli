@@ -6,6 +6,12 @@
 #include "data.h"
 #include "json.h"
 
+const char *help_string = "Usage: %s <mode> <target>\n"
+                          "modes: \n\t-l: list countries in database\n"
+                          "\t-lc <country code>: list cities in country\n"
+                          "\t-gc <city>: get latest measurements for city.\n"
+                          "\t(use quotation marks around multi-word cities).\n";
+
 char *trim(char *string)
 {
     if (string[strlen(string) - 1] == '\n')
@@ -14,33 +20,57 @@ char *trim(char *string)
     return string;
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
     response_data_t raw_data;
     measurements_t measurements_data;
-    char city[MAX_REQUEST_SIZE];
-    char country[3];
+    
+    if (argc < 2)
+    {
+        printf("Invalid arguments.\n");
+        printf(help_string, argv[0]);
+        return 1;
+    } 
 
     init_data(&raw_data);
 
-    puts("Please enter abbreviation of the country: ");
-    scanf("%2s", country);
-    while (getchar() != '\n')
-        continue;
-    fetch_cities(country, &raw_data);
-    json_extract_cities(raw_data.data);
-    
-    printf("Enter city/region (q to quit):\n> ");
-    fgets(city, MAX_REQUEST_SIZE, stdin);
-    while(strcmp(city, "q\n") != 0)
+    if (!strcmp(argv[1], "-l"))
     {
+        fetch_countries(&raw_data);
+        json_extract_countries(raw_data.data);
         clear_data(&raw_data);
-        init_measurements(&measurements_data);
-        fetch_latest_by_city(trim(city), &raw_data);
-        json_extract_measurements(raw_data.data, &measurements_data);
-        print_measurements(&measurements_data);
-        printf("Enter city/region (q to quit):\n> ");
-        fgets(city, MAX_REQUEST_SIZE, stdin);
+    }
+    else if (!strcmp(argv[1], "-lc"))
+    {
+        if (argc < 3)
+        {
+            puts("No country code specified.");
+            printf(help_string, argv[0]);
+            return 1;
+        }
+        else
+        {
+            fetch_cities(argv[2], &raw_data);
+            json_extract_cities(raw_data.data);
+            clear_data(&raw_data);
+        }
+    }
+    else if (!strcmp(argv[1], "-gc"))
+    {
+        if (argc < 3)
+        {
+            puts("No city specified.");
+            printf(help_string, argv[0]);
+            return 1;
+        }
+        else
+        {
+            fetch_latest_by_city(argv[2], &raw_data);
+            init_measurements(&measurements_data);
+            json_extract_measurements(raw_data.data, &measurements_data);
+            clear_data(&raw_data);
+            print_measurements(&measurements_data);
+        }
     }
 
     return 0;

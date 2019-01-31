@@ -28,6 +28,13 @@ void init_measurements(measurements_t *target)
         target->measurements_array[i].pm10 = -1;
         target->measurements_array[i].pm25 = -1;
         target->measurements_array[i].so2 = -1;
+        strcpy(target->measurements_array[i].bc_unit, "\0");
+        strcpy(target->measurements_array[i].co_unit, "\0");
+        strcpy(target->measurements_array[i].no2_unit, "\0");
+        strcpy(target->measurements_array[i].o3_unit, "\0");
+        strcpy(target->measurements_array[i].pm10_unit, "\0");
+        strcpy(target->measurements_array[i].pm25_unit, "\0");
+        strcpy(target->measurements_array[i].so2_unit, "\0");
         target->size = 0;
     }
 }
@@ -39,23 +46,38 @@ void print_measurements(measurements_t *source)
 
     for (int i = 0; i < source->size; i++)
     {
-        printf("\nLocation: \t\t%s\n", source->measurements_array[i].location);
+        printf("Location: \t\t%s\n", source->measurements_array[i].location);
         printf("Date: \t\t\t%s\n", source->measurements_array[i].date);
-        printf("Values:\n");
         if (source->measurements_array[i].bc != -1)
-            printf("\t\t\tBC: %.2f\n", source->measurements_array[i].bc);
+            printf("\t  BC:\t\t%.3f %s\n", 
+                    source->measurements_array[i].bc,
+                    source->measurements_array[i].bc_unit);
         if (source->measurements_array[i].co != -1)
-            printf("\t\t\tCO: %.2f\n", source->measurements_array[i].co);
+            printf("\t  CO:\t\t%.3f %s\n", 
+                    source->measurements_array[i].co,
+                    source->measurements_array[i].co_unit);
         if (source->measurements_array[i].no2 != -1)
-            printf("\t\t\tNo2: %.2f\n", source->measurements_array[i].no2);
+            printf("\t  No2\t\t%.3f %s\n", 
+                    source->measurements_array[i].no2, 
+                    source->measurements_array[i].no2_unit);
         if (source->measurements_array[i].o3 != -1)
-            printf("\t\t\to3: %.2f\n", source->measurements_array[i].o3);
+            printf("\t  o3:\t\t%.3f %s\n", 
+                    source->measurements_array[i].o3, 
+                    source->measurements_array[i].o3_unit);
         if (source->measurements_array[i].pm10 != -1)
-            printf("\t\t\tpm10: %.2f\n", source->measurements_array[i].pm10);
+            printf("\t  pm10:\t\t%.3f %s\n", 
+                    source->measurements_array[i].pm10, 
+                    source->measurements_array[i].pm10_unit);
         if (source->measurements_array[i].pm25 != -1)
-            printf("\t\t\tpm25: %.2f\n", source->measurements_array[i].pm25);
+            printf("\t  pm25:\t\t%.3f %s\n", 
+                    source->measurements_array[i].pm25, 
+                    source->measurements_array[i].pm25_unit);
         if (source->measurements_array[i].so2 != -1)
-            printf("\t\t\tso2: %.2f\n\n", source->measurements_array[i].so2);
+            printf("\t  so2\t\t%.3f %s\n\n", 
+                    source->measurements_array[i].so2, 
+                    source->measurements_array[i].so2_unit);
+        printf("\n");
     }
+
 }
 
