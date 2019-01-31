@@ -8,8 +8,8 @@
 
 int main(void)
 {
-    struct response_data raw_data;
-    struct measurements measurements_data;
+    response_data_t raw_data;
+    measurements_t measurements_data;
     char city[MAX_REQUEST_SIZE];
     char country[3];
 

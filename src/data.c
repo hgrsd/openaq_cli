@@ -4,20 +4,20 @@
 
 #include "data.h"
 
-void clear_data(struct response_data *data)
+void clear_data(response_data_t *data)
 {
     free(data->data);
     data->data = malloc(1);
     data->size = 0;
 }
 
-void init_data(struct response_data *data)
+void init_data(response_data_t *data)
 {
     data->data = malloc(1);
     data->size = 0;
 }
 
-void init_measurements(struct measurements *target)
+void init_measurements(measurements_t *target)
 {
     for (int i = 0; i < MAX_MEASUREMENTS; i++)
     {
@@ -32,7 +32,7 @@ void init_measurements(struct measurements *target)
     }
 }
 
-void print_measurements(struct measurements *source)
+void print_measurements(measurements_t *source)
 {
     for (int i = 0; i < source->size; i++)
     {

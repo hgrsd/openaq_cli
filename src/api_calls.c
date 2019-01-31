@@ -7,7 +7,7 @@
 
 int write_callback(void *input, size_t size, size_t nmemb, void *target)
 {
-    struct response_data *received = (struct response_data *)target;
+    response_data_t *received = (response_data_t *)target;
     char *ptr = realloc(received->data, received->size + nmemb + 1);
 	
 	received->data = ptr;
