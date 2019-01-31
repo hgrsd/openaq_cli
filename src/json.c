@@ -128,7 +128,6 @@ void json_extract_locations(char *raw_data)
         {
             parameter = json_array_get(parameters, j);
             printf("%s ", json_string_value(parameter));
-            json_decref(parameter);
         }
         printf("\n");
     }
