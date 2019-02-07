@@ -71,6 +71,7 @@ void fetch_locations_by_city(char *city, void *response)
     char *city_urlencoded = curl_easy_escape(curl_handle, city, 0);
 
     sprintf(request, URL_LOCATIONS, city_urlencoded);
+    curl_free(city_urlencoded);
     curl_easy_cleanup(curl_handle);    
     fetch_data(request, response);
 }
@@ -84,6 +85,7 @@ void fetch_latest_by_city(char *city, void *response)
 
     city_urlencoded = curl_easy_escape(curl_handle, city, 0);
     sprintf(request, URL_LATEST, city_urlencoded);
+    curl_free(city_urlencoded);
     curl_easy_cleanup(curl_handle);
     fetch_data(request, response);
 }
