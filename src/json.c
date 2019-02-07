@@ -5,7 +5,7 @@
 
 
 // extracts the JSON data from raw_data and stores the measurement data in the struct measurements *target
-void json_extract_measurements(char *raw_data, measurements_t *target)
+void json_extract_measurements(const char *raw_data, measurements_t *target)
 {
     json_t *root, *results, *entry, *location, *measurements;
     json_t *measurement_line, *parameter, *date, *value, *unit;
@@ -81,7 +81,7 @@ void json_extract_measurements(char *raw_data, measurements_t *target)
 }
 
 
-void json_extract_cities(char *raw_data)
+void json_extract_cities(const char *raw_data)
 {
     json_t *root, *results, *entry, *city, *locations;
     json_error_t error;
@@ -105,7 +105,7 @@ void json_extract_cities(char *raw_data)
     json_decref(root);
 }
 
-void json_extract_locations(char *raw_data)
+void json_extract_locations(const char *raw_data)
 {
     json_t *root, *results, *entry, *location, *parameters, *parameter;
     json_error_t error;
@@ -134,7 +134,7 @@ void json_extract_locations(char *raw_data)
     json_decref(root);
 }
 
-void json_extract_countries(char *raw_data)
+void json_extract_countries(const char *raw_data)
 {
     json_t *root, *results, *entry, *country, *country_code, *cities;
     json_error_t error;
