@@ -7,4 +7,4 @@
 #define COPY_INVALID_ARGUMENTS 2
 
 // Copies at most `dest_size` bytes from `src` into `dest`.
-int strcpy_s(char *dest, size_t dest_size, const char *src);
+int strcpy_s(char *dest, const char *src, size_t dest_size);

@@ -1,7 +1,17 @@
 #include <jansson.h>
 #include <string.h>
+#include "string_util.h"
 
 #include "json.h"
+
+static void trim(char *string, int max_length)
+{
+    int len = strlen(string);
+    if (len >= max_length)
+    {
+        string[max_length - 1] = '\0';
+    }
+}
 
 static json_t *get_results(const char *raw_data, json_t *root)
 {
@@ -40,16 +50,14 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
     {
         entry = json_array_get(results, i);
         location = json_object_get(entry, "location");
+        strcpy_s(target->measurements_array[i].location, json_string_value(location), LOCATION_MAX);        
         measurements = json_object_get(entry, "measurements");
-        
-        strncpy(target->measurements_array[i].location, json_string_value(location), LOCATION_MAX);
-        
         for (int j = 0; j < json_array_size(measurements); j++)
         {
             measurement_line = json_array_get(measurements, j);
             parameter = json_object_get(measurement_line, "parameter");
             date = json_object_get(measurement_line, "lastUpdated");
-            strncpy(target->measurements_array[i].date, json_string_value(date), DATE_MAX);
+            strcpy_s(target->measurements_array[i].date, json_string_value(date), DATE_MAX);
             parameter_string = json_string_value(parameter);
             value = json_object_get(measurement_line, "value");
             unit = json_object_get(measurement_line, "unit");
@@ -57,37 +65,37 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
             if (strcmp(parameter_string, "pm25") == 0)
             {
                 target->measurements_array[i].pm25 = json_real_value(value);
-                strncpy(target->measurements_array[i].pm25_unit, json_string_value(unit), UNIT_MAX);
+                strcpy_s(target->measurements_array[i].pm25_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "pm10") == 0)
             {
                 target->measurements_array[i].pm10 = json_real_value(value);
-                strncpy(target->measurements_array[i].pm10_unit, json_string_value(unit), UNIT_MAX);
+                strcpy_s(target->measurements_array[i].pm10_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "o3") == 0)
             {
                 target->measurements_array[i].o3 = json_real_value(value);
-                strncpy(target->measurements_array[i].o3_unit, json_string_value(unit), UNIT_MAX);
+                strcpy_s(target->measurements_array[i].o3_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "so2") == 0)
             {
                 target->measurements_array[i].so2 = json_real_value(value);
-                strncpy(target->measurements_array[i].so2_unit, json_string_value(unit), UNIT_MAX);
+                strcpy_s(target->measurements_array[i].so2_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "no2") == 0)
             {
                 target->measurements_array[i].no2 = json_real_value(value);
-                strncpy(target->measurements_array[i].no2_unit, json_string_value(unit), UNIT_MAX);
+                strcpy_s(target->measurements_array[i].no2_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "co") == 0)
             {
                 target->measurements_array[i].co = json_real_value(value);
-                strncpy(target->measurements_array[i].co_unit, json_string_value(unit), UNIT_MAX);
+                strcpy_s(target->measurements_array[i].co_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "bc") == 0)
             {
                 target->measurements_array[i].bc = json_real_value(value);
-                strncpy(target->measurements_array[i].bc_unit, json_string_value(unit), UNIT_MAX);
+                strcpy_s(target->measurements_array[i].bc_unit, json_string_value(unit), UNIT_MAX);
             }
             else
                 printf("Unknown parameter: %s. Ignoring.\n", parameter_string);

@@ -1,6 +1,6 @@
 #include "string_util.h"
 
-int strcpy_s(char *dest, size_t dest_size, const char *src)
+int strcpy_s(char *dest, const char *src, size_t dest_size)
 {
 	if(dest_size < 1 || !dest)
 	{
