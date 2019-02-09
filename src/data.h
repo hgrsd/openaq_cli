@@ -4,7 +4,6 @@
 #define LOCATION_MAX 40
 #define DATE_MAX 30
 #define UNIT_MAX 12
-#define MEASUREMENT_LABEL_MAX 5
 
 struct _response_data_t
 {
