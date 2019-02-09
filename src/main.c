@@ -5,6 +5,7 @@
 #include "api_calls.h"
 #include "data.h"
 #include "json.h"
+#include "string_util.h"
 
 const char *help_string = "Usage: %s <mode> <target>\n"
                           "modes: \n\t-l: list countries in database\n"
@@ -12,13 +13,7 @@ const char *help_string = "Usage: %s <mode> <target>\n"
                           "\t-gc <city>: get latest measurements for city.\n"
                           "\t(use quotation marks around multi-word cities).\n";
 
-char *trim(char *string)
-{
-    if (string[strlen(string) - 1] == '\n')
-        string[strlen(string) - 1] = '\0';
 
-    return string;
-}
 
 int main(int argc, char *argv[])
 {

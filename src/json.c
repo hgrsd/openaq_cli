@@ -4,15 +4,6 @@
 
 #include "json.h"
 
-static void trim(char *string, int max_length)
-{
-    int len = strlen(string);
-    if (len >= max_length)
-    {
-        string[max_length - 1] = '\0';
-    }
-}
-
 static json_t *get_results(const char *raw_data, json_t *root)
 {
     json_t *return_array;
@@ -28,7 +19,6 @@ static json_t *get_results(const char *raw_data, json_t *root)
     return return_array;
 }
 
-// extracts the JSON data from raw_data and stores the measurement data in the struct measurements *target
 void json_extract_measurements(const char *raw_data, measurements_t *target)
 {
     json_t *root, *results, *entry, *location, *measurements;
@@ -103,7 +93,6 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
     }
     json_decref(root);
 }
-
 
 void json_extract_cities(const char *raw_data)
 {
