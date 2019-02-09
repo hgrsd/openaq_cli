@@ -3,6 +3,7 @@
 
 #define LOCATION_MAX 40
 #define DATE_MAX 30
+#define UNIT_MAX 12
 #define MAX_MEASUREMENTS 100
 
 struct _response_data_t
@@ -16,21 +17,22 @@ struct _measurement_t
 {
     char location[LOCATION_MAX];
     char date[DATE_MAX];
-    float pm25;
-    char pm25_unit[10];
+    char pm25_unit[UNIT_MAX];
+    char pm10_unit[UNIT_MAX];
+    char o3_unit[UNIT_MAX];
+    char so2_unit[UNIT_MAX];
+    char no2_unit[UNIT_MAX];
+    char co_unit[UNIT_MAX];
+    char bc_unit[UNIT_MAX];
+    float pm25;    
     float pm10;
-    char pm10_unit[10];
-    float o3;
-    char o3_unit[10];
-    float so2;
-    char so2_unit[10];
-    float no2;
-    char no2_unit[10];
-    float co;
-    char co_unit[10];
+    float o3;    
+    float so2;    
+    float no2;    
+    float co;    
     float bc;
-    char bc_unit[10];
 };
+
 typedef struct _measurement_t measurement_t;
 
 struct _measurements_t

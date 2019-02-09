@@ -42,41 +42,41 @@ void init_measurements(measurements_t *target)
 void print_measurements(measurements_t *source)
 {
     if(source->size == 0)
-        puts('No measurements found.');
+        puts("No measurements found.");
 
     for (int i = 0; i < source->size; i++)
     {
-        printf('Location: \t\t%s\n', source->measurements_array[i].location);
-        printf('Date: \t\t\t%s\n', source->measurements_array[i].date);
+        printf("Location: \t\t%s\n", source->measurements_array[i].location);
+        printf("Date: \t\t\t%s\n", source->measurements_array[i].date);
         if (source->measurements_array[i].bc != -1)
-            printf('\t  BC:\t\t%.3f %s\n', 
+            printf("\t  BC:\t\t%.3f %s\n", 
                     source->measurements_array[i].bc,
                     source->measurements_array[i].bc_unit);
         if (source->measurements_array[i].co != -1)
-            printf('\t  CO:\t\t%.3f %s\n', 
+            printf("\t  CO:\t\t%.3f %s\n", 
                     source->measurements_array[i].co,
                     source->measurements_array[i].co_unit);
         if (source->measurements_array[i].no2 != -1)
-            printf('\t  No2\t\t%.3f %s\n', 
+            printf("\t  No2\t\t%.3f %s\n", 
                     source->measurements_array[i].no2, 
                     source->measurements_array[i].no2_unit);
         if (source->measurements_array[i].o3 != -1)
-            printf('\t  o3:\t\t%.3f %s\n', 
+            printf("\t  o3:\t\t%.3f %s\n", 
                     source->measurements_array[i].o3, 
                     source->measurements_array[i].o3_unit);
         if (source->measurements_array[i].pm10 != -1)
-            printf('\t  pm10:\t\t%.3f %s\n', 
+            printf("\t  pm10:\t\t%.3f %s\n", 
                     source->measurements_array[i].pm10, 
                     source->measurements_array[i].pm10_unit);
         if (source->measurements_array[i].pm25 != -1)
-            printf('\t  pm25:\t\t%.3f %s\n', 
+            printf("\t  pm25:\t\t%.3f %s\n", 
                     source->measurements_array[i].pm25, 
                     source->measurements_array[i].pm25_unit);
         if (source->measurements_array[i].so2 != -1)
-            printf('\t  so2\t\t%.3f %s\n\n', 
+            printf("\t  so2\t\t%.3f %s\n\n", 
                     source->measurements_array[i].so2, 
                     source->measurements_array[i].so2_unit);
-        printf('\n');
+        printf("\n");
     }
 
 }
