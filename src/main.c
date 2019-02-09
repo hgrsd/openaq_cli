@@ -23,8 +23,8 @@ char *trim(char *string)
 int main(int argc, char *argv[])
 {
     response_data_t raw_data;
-    measurements_t measurements_data;
-    
+    measurements_t measurements_data = {NULL, 0};
+
     if (argc < 2)
     {
         printf("Invalid arguments.\n");
@@ -66,7 +66,6 @@ int main(int argc, char *argv[])
         else
         {
             fetch_latest_by_city(argv[2], &raw_data);
-            init_measurements(&measurements_data);
             json_extract_measurements(raw_data.data, &measurements_data);
             clear_data(&raw_data);
             print_measurements(&measurements_data);

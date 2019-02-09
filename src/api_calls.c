@@ -59,6 +59,12 @@ void fetch_countries(void *response)
 void fetch_cities(char *country, void *response)
 {
     char request[MAX_REQUEST_SIZE];
+    if (strlen(country) + strlen(URL_CITIES) > MAX_REQUEST_SIZE - 1)
+    {
+        printf("Country code too long.\n");
+        return;
+    }
+
     sprintf(request, URL_CITIES, country);
     fetch_data(request, response);
 }
@@ -68,7 +74,15 @@ void fetch_locations_by_city(char *city, void *response)
     CURL *curl_handle; 
     curl_handle = curl_easy_init();
     char request[MAX_REQUEST_SIZE];
-    char *city_urlencoded = curl_easy_escape(curl_handle, city, 0);
+    char *city_urlencoded;
+
+    if (strlen(city) + strlen(URL_LOCATIONS) > MAX_REQUEST_SIZE -1)
+    {
+        printf("City name too long.\n");
+        return;
+    }
+
+    city_urlencoded = curl_easy_escape(curl_handle, city, 0);
 
     sprintf(request, URL_LOCATIONS, city_urlencoded);
     curl_free(city_urlencoded);
@@ -82,6 +96,12 @@ void fetch_latest_by_city(char *city, void *response)
     curl_handle = curl_easy_init();
     char request[MAX_REQUEST_SIZE];
     char *city_urlencoded;
+
+    if (strlen(city) + strlen(URL_LATEST) > MAX_REQUEST_SIZE -1)
+    {
+        printf("City name too long.\n");
+        return;
+    }
 
     city_urlencoded = curl_easy_escape(curl_handle, city, 0);
     sprintf(request, URL_LATEST, city_urlencoded);

@@ -3,6 +3,20 @@
 
 #include "json.h"
 
+static json_t *get_results(const char *raw_data, json_t *root)
+{
+    json_t *return_array;
+
+    if (!json_is_object(root))
+    {
+        puts("error");
+        json_decref(root);
+        return NULL;
+    }
+    return_array = json_object_get(root, "results");
+    
+    return return_array;
+}
 
 // extracts the JSON data from raw_data and stores the measurement data in the struct measurements *target
 void json_extract_measurements(const char *raw_data, measurements_t *target)
@@ -10,24 +24,27 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
     json_t *root, *results, *entry, *location, *measurements;
     json_t *measurement_line, *parameter, *date, *value, *unit;
     json_error_t error;
+    int array_size;
     const char *parameter_string;
-
+   
     root = json_loads(raw_data, 0, &error);
-    if (!json_is_object(root))
-    {
-        puts("error");
-        json_decref(root);
-        return;
-    }
-
-    results = json_object_get(root, "results");
-    for (int i = 0; i < json_array_size(results); i++)
+    results = get_results(raw_data, root);
+    
+    array_size = json_array_size(results);
+    if (target->measurements_array != NULL)
+        free(target->measurements_array);
+    target->measurements_array = (measurement_t *) malloc(sizeof(measurement_t) * array_size);
+    init_measurements(target, array_size);
+    
+    for (int i = 0; i < array_size; i++)
     {
         entry = json_array_get(results, i);
         location = json_object_get(entry, "location");
         measurements = json_object_get(entry, "measurements");
+        
         strcpy(target->measurements_array[i].location, json_string_value(location));
-        for (int j = 0; j < json_array_size(measurements) && j < MAX_MEASUREMENTS; j++)
+        
+        for (int j = 0; j < json_array_size(measurements); j++)
         {
             measurement_line = json_array_get(measurements, j);
             parameter = json_object_get(measurement_line, "parameter");
@@ -75,7 +92,6 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
             else
                 printf("Unknown parameter: %s. Ignoring.\n", parameter_string);
         }
-        target->size++;
     }
     json_decref(root);
 }
@@ -87,13 +103,8 @@ void json_extract_cities(const char *raw_data)
     json_error_t error;
 
     root = json_loads(raw_data, 0, &error);
-    if (!json_is_object(root))
-    {
-        puts("error");
-        json_decref(root);
-        return;
-    }
-    results = json_object_get(root, "results");
+    results = get_results(raw_data, root);
+    
     for (int i = 0; i < json_array_size(results); i++)
     {
         entry = json_array_get(results, i);
@@ -111,13 +122,8 @@ void json_extract_locations(const char *raw_data)
     json_error_t error;
 
     root = json_loads(raw_data, 0, &error);
-    if (!json_is_object(root))
-    {
-        puts("error");
-        json_decref(root);
-        return;
-    }
-    results = json_object_get(root, "results");
+    results = get_results(raw_data, root);
+   
     for (int i = 0; i < json_array_size(results); i++)
     {
         entry = json_array_get(results, i);
@@ -140,13 +146,8 @@ void json_extract_countries(const char *raw_data)
     json_error_t error;
 
     root = json_loads(raw_data, 0, &error);
-    if (!json_is_object(root))
-    {
-        puts("error");
-        json_decref(root);
-        return;
-    }
-    results = json_object_get(root, "results");
+    results = get_results(raw_data, root);
+    
     for (int i = 0; i < json_array_size(results); i++)
     {
         entry = json_array_get(results, i);
