@@ -39,7 +39,7 @@ void init_measurements(measurements_t *target)
     }
 }
 
-inline void print_measurement(char measurement[MEASUREMENT_MAX], float value, char unit[UNIT_MAX])
+static inline void print_measurement(const char *measurement, float value, const char *unit)
 {
     printf("%s: \t\t\t%.3f %s\n", measurement, value, unit);
 }
