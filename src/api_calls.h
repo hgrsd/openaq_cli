@@ -6,7 +6,7 @@
 #define URL_LOCATIONS "https://api.openaq.org/v1/locations?limit=100&city=%s"
 #define URL_LATEST "https://api.openaq.org/v1/latest?city=%s"
 
-#define MAX_REQUEST_SIZE 80
+#define MAX_REQUEST_SIZE 128
 
 void fetch_countries(void *response);
 void fetch_cities(char *country, void *response);

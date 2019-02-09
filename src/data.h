@@ -4,8 +4,7 @@
 #define LOCATION_MAX 40
 #define DATE_MAX 30
 #define UNIT_MAX 12
-#define MAX_MEASUREMENTS 100
-#define MEASUREMENT_MAX 5
+#define MEASUREMENT_LABEL_MAX 5
 
 struct _response_data_t
 {
@@ -38,14 +37,14 @@ typedef struct _measurement_t measurement_t;
 
 struct _measurements_t
 {
-    struct _measurement_t measurements_array[MAX_MEASUREMENTS];
+    struct _measurement_t *measurements_array;
     int size;
 };
 typedef struct _measurements_t measurements_t;
 
 void clear_data(response_data_t *data);
 void init_data(response_data_t *data);
-void init_measurements(measurements_t *target);
+void init_measurements(measurements_t *target, int size);
 void print_measurements(measurements_t *source);
 
 #endif

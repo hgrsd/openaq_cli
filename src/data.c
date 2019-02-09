@@ -4,6 +4,11 @@
 
 #include "data.h"
 
+static void print_measurement(char label[MEASUREMENT_LABEL_MAX], float value, char unit[UNIT_MAX])
+{
+    printf("%s: \t\t\t%.3f %s\n", label, value, unit);
+}
+
 void clear_data(response_data_t *data)
 {
     free(data->data);
@@ -17,10 +22,10 @@ void init_data(response_data_t *data)
     data->size = 0;
 }
 
-void init_measurements(measurements_t *target)
+void init_measurements(measurements_t *target, int size)
 {
-    target->size = 0;
-    for (int i = 0; i < MAX_MEASUREMENTS; i++)
+    target->size = size;
+    for (int i = 0; i < size; i++)
     {
         target->measurements_array[i].bc = -1;
         target->measurements_array[i].co = -1;
@@ -29,19 +34,7 @@ void init_measurements(measurements_t *target)
         target->measurements_array[i].pm10 = -1;
         target->measurements_array[i].pm25 = -1;
         target->measurements_array[i].so2 = -1;
-        target->measurements_array[i].bc_unit[0] = '\0';
-        target->measurements_array[i].co_unit[0] = '\0';
-        target->measurements_array[i].no2_unit[0] = '\0';
-        target->measurements_array[i].o3_unit[0] = '\0';
-        target->measurements_array[i].pm10_unit[0] = '\0';
-        target->measurements_array[i].pm25_unit[0] = '\0';
-        target->measurements_array[i].so2_unit[0] = '\0';
     }
-}
-
-inline void print_measurement(char measurement[MEASUREMENT_MAX], float value, char unit[UNIT_MAX])
-{
-    printf("%s: \t\t\t%.3f %s\n", measurement, value, unit);
 }
 
 void print_measurements(measurements_t *source)
