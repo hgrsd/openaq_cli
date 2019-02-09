@@ -5,6 +5,7 @@
 #define DATE_MAX 30
 #define UNIT_MAX 12
 #define MAX_MEASUREMENTS 100
+#define MEASUREMENT_MAX 5
 
 struct _response_data_t
 {
