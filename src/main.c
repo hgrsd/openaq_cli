@@ -64,6 +64,7 @@ int main(int argc, char *argv[])
             json_extract_measurements(raw_data.data, &measurements_data);
             clear_data(&raw_data);
             print_measurements(&measurements_data);
+            free(measurements_data.measurements_array);
         }
     }
 
