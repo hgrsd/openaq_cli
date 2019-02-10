@@ -158,7 +158,6 @@ void json_extract_countries(const char *raw_data)
                 json_string_value(country_code), 
                 json_string_value(country),
                 json_integer_value(cities));
-        
     }
 
     json_decref(root);
