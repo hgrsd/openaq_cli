@@ -7,7 +7,8 @@ endif()
 
 project (OpenAQ_CLI)
 add_executable (openaq_cli
-				main.c
+				openaq_cli.c
+				core.c
 				data.c
 				string_util.c
 				json.c

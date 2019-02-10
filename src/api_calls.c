@@ -3,9 +3,8 @@
 #include <stdlib.h>
 
 #include "api_calls.h"
-#include "data.h"
 
-int write_callback(void *input, size_t size, size_t nmemb, void *target)
+static int write_callback(void *input, size_t size, size_t nmemb, void *target)
 {
     response_data_t *received = (response_data_t *)target;
     char *ptr = realloc(received->data, received->size + nmemb + 1);
@@ -18,7 +17,7 @@ int write_callback(void *input, size_t size, size_t nmemb, void *target)
 	return nmemb;
 }
 
-void api_init(void)
+static void api_init(void)
 {
 	static int initialised = 0;
 
@@ -28,7 +27,7 @@ void api_init(void)
 	initialised = 1;
 }
 
-void fetch_data(char *request, void *response)
+static void fetch_data(char *request, void *response)
 {
     CURL *curl_handle;
     CURLcode curl_response;
@@ -49,16 +48,18 @@ void fetch_data(char *request, void *response)
     curl_easy_cleanup(curl_handle);
 }
 
-void fetch_countries(void *response)
+void api_fetch_countries(void *response)
 {
     char request[MAX_REQUEST_SIZE];
+
     sprintf(request, URL_COUNTRIES, "?limit=200");
     fetch_data(request, response);
 }
 
-void fetch_cities(char *country, void *response)
+void api_fetch_cities(char *country, void *response)
 {
     char request[MAX_REQUEST_SIZE];
+
     if (strlen(country) + strlen(URL_CITIES) > MAX_REQUEST_SIZE - 1)
     {
         printf("Country code too long.\n");
@@ -69,7 +70,7 @@ void fetch_cities(char *country, void *response)
     fetch_data(request, response);
 }
 
-void fetch_locations_by_city(char *city, void *response)
+void api_fetch_locations_by_city(char *city, void *response)
 {
     CURL *curl_handle; 
     curl_handle = curl_easy_init();
@@ -83,14 +84,13 @@ void fetch_locations_by_city(char *city, void *response)
     }
 
     city_urlencoded = curl_easy_escape(curl_handle, city, 0);
-
     sprintf(request, URL_LOCATIONS, city_urlencoded);
     curl_free(city_urlencoded);
     curl_easy_cleanup(curl_handle);    
     fetch_data(request, response);
 }
 
-void fetch_latest_by_city(char *city, void *response)
+void api_fetch_latest_by_city(char *city, void *response)
 {
     CURL *curl_handle;
     curl_handle = curl_easy_init();

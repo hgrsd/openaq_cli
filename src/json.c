@@ -28,8 +28,7 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
     const char *parameter_string;
    
     root = json_loads(raw_data, 0, &error);
-    results = get_results(raw_data, root);
-    
+    results = get_results(raw_data, root);    
     array_size = json_array_size(results);
     if (target->measurements_array != NULL)
         free(target->measurements_array);
@@ -91,6 +90,7 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
                 printf("Unknown parameter: %s. Ignoring.\n", parameter_string);
         }
     }
+
     json_decref(root);
 }
 
@@ -110,6 +110,7 @@ void json_extract_cities(const char *raw_data)
         printf("%d. %s: %lld location(s).\n", i + 1, 
                 json_string_value(city), json_integer_value(locations));
     }
+
     json_decref(root);
 }
 
@@ -134,6 +135,7 @@ void json_extract_locations(const char *raw_data)
         }
         printf("\n");
     }
+
     json_decref(root);
 }
 
@@ -158,5 +160,6 @@ void json_extract_countries(const char *raw_data)
                 json_integer_value(cities));
         
     }
+
     json_decref(root);
 }

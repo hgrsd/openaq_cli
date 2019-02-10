@@ -8,15 +8,17 @@
 
 #define MAX_REQUEST_SIZE 128
 
+#include "data.h"
+
 // Fetches all countries and country codes, stores JSON string in response
-void fetch_countries(void *response);
+void api_fetch_countries(void *response);
 // Fetches all cities in the specified country, stores JSON string in response
-void fetch_cities(char *country, void *response);
+void api_fetch_cities(char *country, void *response);
 // Fetches all locations in the specified city, stores JSON string in response
-void fetch_locations_by_city(char *city, void *response);
+void api_fetch_locations_by_city(char *city, void *response);
 // Fetches the latest measurements for each location in the specified city, stores JSON string in response.
-void fetch_latest_by_city(char *city, void *response);
+void api_fetch_latest_by_city(char *city, void *response);
 // Fetches the latest measurements for the location specified, stores JSON string in response.
-void fetch_latest_by_location(char *location, void *response);
+void api_fetch_latest_by_location(char *location, void *response);
 
 #endif 
