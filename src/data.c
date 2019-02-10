@@ -4,6 +4,17 @@
 
 #include "data.h"
 
+size_t offsets[] = {
+    offsetof(measurement_t, pm25),
+    offsetof(measurement_t, pm10),
+    offsetof(measurement_t, o3),
+    offsetof(measurement_t, so2),
+    offsetof(measurement_t, no2),
+    offsetof(measurement_t, co),
+    offsetof(measurement_t, bc),
+    0
+};
+
 static inline void print_value(const char *measurement, float value, const char *unit)
 {
     printf("%s: \t\t\t%.3f %s\n", measurement, value, unit);
@@ -89,7 +100,7 @@ void print_measurements(measurements_t *source)
 
     for (int i = 0; i < source->size; i++)
     {
-        print_measurement(&(source->measurements_array[i]));
+        print_measurement(source->measurements_array + i);
     }
 }
 

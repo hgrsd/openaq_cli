@@ -15,46 +15,17 @@ measurement_t *find_highest(measurements_t *measurements_data, parameter_t param
     float max = -1;
     float val;
     measurement_t *highest = NULL;
-    size_t offset;
+    size_t offset = offsets[parameter];
     
-    switch(parameter)
+    if (offset == 0)
     {
-        case PARAM_BC:
-            offset = offsetof(measurement_t, bc);
-            break;
-
-        case PARAM_CO:
-            offset = offsetof(measurement_t, co);
-            break;
-
-        case PARAM_NO2:
-            offset = offsetof(measurement_t, no2);
-            break;
-
-        case PARAM_O3:
-            offset = offsetof(measurement_t, o3);
-            break;
-
-        case PARAM_PM10:
-            offset = offsetof(measurement_t, pm10);
-            break;
-
-        case PARAM_PM25:
-            offset = offsetof(measurement_t, pm25);
-            break;
-
-        case PARAM_SO2:
-            offset = offsetof(measurement_t, so2);
-            break;
-        
-        case PARAM_INVALID:
-            printf("Invalid parameter. Valid parameters: BC, CO, NO2, O3, PM10, PM25, SO2.\n");
-            return NULL;
+        printf("Invalid parameter. Valid parameters are: PM25, PM10, NO2, CO, BC, O3, SO2.\n");
+        return NULL;
     }
-
+    
     for (int i = 0; i < measurements_data->size; i++)
     {
-        base = &(measurements_data->measurements_array[i]);
+        base = measurements_data->measurements_array + i;
         val = *(float *)(base + offset);
         if (val > max)
         {
@@ -143,5 +114,9 @@ void find_highest_by_city(const char *city, const char *parameter)
     {
         printf("Highest amount of %s found in the following location: \n", parameter);
         print_measurement(highest);
+    }
+    else
+    {
+        printf("Not found.\n");
     }
 }

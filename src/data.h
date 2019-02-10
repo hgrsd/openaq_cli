@@ -2,6 +2,7 @@
 #define _DATA_H_
 
 #include <stdlib.h>
+#include <stddef.h>
 
 #define LOCATION_MAX 128
 #define DATE_MAX 30
@@ -48,8 +49,10 @@ struct _measurement_t
     float co;    
     float bc;
 };
-
 typedef struct _measurement_t measurement_t;
+
+extern size_t offsets[];
+
 
 struct _measurements_t
 {
