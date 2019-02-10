@@ -10,15 +10,16 @@
 
 #include "data.h"
 
-// Fetches all countries and country codes, stores JSON string in response
+// Fetches all countries and country codes, stores raw response string in response
 void api_fetch_countries(void *response);
-// Fetches all cities in the specified country, stores JSON string in response
+// Fetches all cities in the specified country, stores raw response string in response
 void api_fetch_cities(char *country, void *response);
-// Fetches all locations in the specified city, stores JSON string in response
-void api_fetch_locations_by_city(char *city, void *response);
-// Fetches the latest measurements for each location in the specified city, stores JSON string in response.
+// Fetches the latest measurements for each location in the specified city, stores raw response string in response.
 void api_fetch_latest_by_city(char *city, void *response);
-// Fetches the latest measurements for the location specified, stores JSON string in response.
-void api_fetch_latest_by_location(char *location, void *response);
+
+// TODO: Fetches all locations in the specified city, stores raw response string in response
+// void api_fetch_locations_by_city(char *city, void *response);
+// TODO: Fetches the latest measurements for the location specified, stores raw response string in response.
+// void api_fetch_latest_by_location(char *location, void *response);
 
 #endif 
