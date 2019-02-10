@@ -1,6 +1,8 @@
 #ifndef _DATA_H_
 #define _DATA_H_
 
+#include <stdlib.h>
+
 #define LOCATION_MAX 40
 #define DATE_MAX 30
 #define UNIT_MAX 12
@@ -46,7 +48,7 @@ void clear_data(response_data_t *data);
 // Initialises a declared, unused response_data_t structure. Must be called before using the structure.
 void init_data(response_data_t *data);
 // Initialises an array of measurements. Must be called before using the structure.
-void init_measurements(measurements_t *target, size_t size);
+void init_measurements(measurements_t *target, int nmemb);
 // Prints all measurements contained in the structure passed in.
 void print_measurements(measurements_t *source);
 

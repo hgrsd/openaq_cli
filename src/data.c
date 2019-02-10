@@ -22,10 +22,10 @@ void init_data(response_data_t *data)
     data->size = 0;
 }
 
-void init_measurements(measurements_t *target, size_t size)
+void init_measurements(measurements_t *target, int nmemb)
 {
-    target->size = size;
-    for (int i = 0; i < size; i++)
+    target->size = nmemb;
+    for (int i = 0; i < nmemb; i++)
     {
         target->measurements_array[i].bc = -1;
         target->measurements_array[i].co = -1;
