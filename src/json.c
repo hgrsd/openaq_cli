@@ -21,7 +21,7 @@ static json_t *get_results(const char *raw_data, json_t *root)
 
 void json_extract_measurements(const char *raw_data, measurements_t *target)
 {
-    json_t *root, *results, *entry, *location, *measurements;
+    json_t *root, *results, *entry, *location, *measurements, *coordinates, *latitude, *longitude;
     json_t *measurement_line, *parameter, *date, *value, *unit;
     json_error_t error;
     int array_size;
@@ -38,8 +38,15 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
     for (int i = 0; i < array_size; i++)
     {
         entry = json_array_get(results, i);
+
         location = json_object_get(entry, "location");
-        strcpy_s(target->measurements_array[i].location, json_string_value(location), LOCATION_MAX);        
+        strcpy_s(target->measurements_array[i].location, json_string_value(location), LOCATION_MAX);  
+        coordinates = json_object_get(entry, "coordinates");
+        latitude = json_object_get(coordinates, "latitude");     
+        longitude = json_object_get(coordinates, "longitude");    
+        target->measurements_array[i].latitude = json_real_value(latitude); 
+        target->measurements_array[i].longitude = json_real_value(longitude);  
+
         measurements = json_object_get(entry, "measurements");
         for (int j = 0; j < json_array_size(measurements); j++)
         {
@@ -94,7 +101,7 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
     json_decref(root);
 }
 
-void json_extract_cities(const char *raw_data)
+void json_print_cities(const char *raw_data)
 {
     json_t *root, *results, *entry, *city, *locations;
     json_error_t error;
@@ -107,16 +114,17 @@ void json_extract_cities(const char *raw_data)
         entry = json_array_get(results, i);
         city = json_object_get(entry, "city");
         locations = json_object_get(entry, "locations");
-        printf("%d. %s: %lld location(s).\n", i + 1, 
+        printf("\n%d. %s: %lld location(s).", i + 1, 
                 json_string_value(city), json_integer_value(locations));
     }
+    printf("\n");
 
     json_decref(root);
 }
 
-void json_extract_locations(const char *raw_data)
+void json_print_locations(const char *raw_data)
 {
-    json_t *root, *results, *entry, *location, *parameters, *parameter;
+    json_t *root, *results, *entry, *location, *parameters, *parameter, *coordinates, *latitude, *longitude;
     json_error_t error;
 
     root = json_loads(raw_data, 0, &error);
@@ -127,19 +135,26 @@ void json_extract_locations(const char *raw_data)
         entry = json_array_get(results, i);
         location = json_object_get(entry, "location");
         parameters = json_object_get(entry, "parameters");
-        printf("%d.\tLocation: %s\n\tParameters: ", i + 1, json_string_value(location));
+        coordinates = json_object_get(entry, "coordinates");
+        latitude = json_object_get(coordinates, "latitude");
+        longitude = json_object_get(coordinates, "longitude");
+        printf("\n\n%d.\t%s\n\tLatitude: %f\n\tLongitude: %f\n\tParameters: ", 
+                i + 1, 
+                json_string_value(location),
+                json_real_value(latitude),
+                json_real_value(longitude));
         for (int j = 0; j < json_array_size(parameters); j++)
         {
             parameter = json_array_get(parameters, j);
             printf("%s ", json_string_value(parameter));
-        }
-        printf("\n");
+        }        
     }
+    printf("\n\n");
 
     json_decref(root);
 }
 
-void json_extract_countries(const char *raw_data)
+void json_print_countries(const char *raw_data)
 {
     json_t *root, *results, *entry, *country, *country_code, *cities;
     json_error_t error;
@@ -153,12 +168,13 @@ void json_extract_countries(const char *raw_data)
         country = json_object_get(entry, "name");
         country_code = json_object_get(entry, "code");
         cities = json_object_get(entry, "cities");
-        printf("%4d. %2s - %45s (%lld cities)\n", 
+        printf("\n%4d. %2s - %45s (%lld cities)", 
                 i + 1, 
                 json_string_value(country_code), 
                 json_string_value(country),
                 json_integer_value(cities));
     }
+    printf("\n");
 
     json_decref(root);
 }

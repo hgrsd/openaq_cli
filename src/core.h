@@ -4,8 +4,12 @@
 // fetches list of all countries from OpenAQ and prints it to stdout
 void list_countries(void);
 // fetches list of all cities in country from OpenAQ and prints it to stdout
-void list_cities_by_country(char *country);
+void list_cities_by_country(const char *country);
+// fetches list of locations in city and available parameters, prints it to stdout
+void list_locations_by_city(const char *city);
 // fetches latest measurements for city and prints them to stdout
-void fetch_latest_by_city(char *city);
+void fetch_latest_by_city(const char *city);
+// fetches latest measurements for location and prints them to stdout
+void fetch_latest_by_location(const char *location);
 
 #endif
