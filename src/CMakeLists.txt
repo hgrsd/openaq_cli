@@ -11,7 +11,8 @@ add_executable (openaq_cli
 				data.c
 				string_util.c
 				json.c
-				api_calls.c)
+				api_calls.c
+				args.c)
 target_link_libraries (openaq_cli
 						curl
 						jansson)

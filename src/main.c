@@ -5,15 +5,7 @@
 #include "api_calls.h"
 #include "data.h"
 #include "json.h"
-#include "string_util.h"
-
-const char *help_string = "Usage: %s <mode> <target>\n"
-                          "modes: \n\t-l: list countries in database\n"
-                          "\t-lc <country code>: list cities in country\n"
-                          "\t-gc <city>: get latest measurements for city.\n"
-                          "\t(use quotation marks around multi-word cities).\n";
-
-
+#include "args.h"
 
 int main(int argc, char *argv[])
 {
@@ -22,25 +14,35 @@ int main(int argc, char *argv[])
 
     if (argc < 2)
     {
-        printf("Invalid arguments.\n");
-        printf(help_string, argv[0]);
+        printf("Invalid arguments. ");
+        print_info(argv[0]);
         return 1;
     } 
 
     init_data(&raw_data);
 
-    if (!strcmp(argv[1], "-l"))
+    if (!strcmp(argv[1], HELP))
+    {
+        print_info(argv[0]);
+    }
+    else if (!strcmp(argv[1], LIST_COUNTRIES))
     {
         fetch_countries(&raw_data);
         json_extract_countries(raw_data.data);
         clear_data(&raw_data);
     }
-    else if (!strcmp(argv[1], "-lc"))
+    else if (!strcmp(argv[1], LIST_COUNTRIES))
+    {
+        fetch_countries(&raw_data);
+        json_extract_countries(raw_data.data);
+        clear_data(&raw_data);
+    }
+    else if (!strcmp(argv[1], LIST_CITIES_BY_COUNTRY))
     {
         if (argc < 3)
         {
             puts("No country code specified.");
-            printf(help_string, argv[0]);
+            print_info(argv[0]);
             return 1;
         }
         else
@@ -50,12 +52,12 @@ int main(int argc, char *argv[])
             clear_data(&raw_data);
         }
     }
-    else if (!strcmp(argv[1], "-gc"))
+    else if (!strcmp(argv[1], FETCH_LATEST_BY_CITY))
     {
         if (argc < 3)
         {
             puts("No city specified.");
-            printf(help_string, argv[0]);
+            print_info(argv[0]);
             return 1;
         }
         else
@@ -66,6 +68,12 @@ int main(int argc, char *argv[])
             print_measurements(&measurements_data);
             free(measurements_data.measurements_array);
         }
+    }
+    else
+    {
+        puts("Argument not recognised.");
+        print_info(argv[0]);
+        return 1;
     }
 
     return 0;
