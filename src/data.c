@@ -27,6 +27,8 @@ void init_measurements(measurements_t *target, int nmemb)
     target->size = nmemb;
     for (int i = 0; i < nmemb; i++)
     {
+        target->measurements_array[i].latitude = 0;
+        target->measurements_array[i].longitude = 0;
         target->measurements_array[i].bc = -1;
         target->measurements_array[i].co = -1;
         target->measurements_array[i].no2 = -1;
@@ -46,6 +48,8 @@ void print_measurements(measurements_t *source)
     {
         printf("Location: \t\t%s\n", source->measurements_array[i].location);
         printf("Date: \t\t\t%s\n", source->measurements_array[i].date);
+        printf("Latitude:\t\t%f\n", source->measurements_array[i].latitude);
+        printf("Longitude:\t\t%f\n", source->measurements_array[i].longitude);
         if (source->measurements_array[i].bc != -1)
             print_measurement("BC", source->measurements_array[i].bc, source->measurements_array[i].bc_unit);
         if (source->measurements_array[i].co != -1)

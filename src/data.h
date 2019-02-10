@@ -25,6 +25,8 @@ struct _measurement_t
     char no2_unit[UNIT_MAX];
     char co_unit[UNIT_MAX];
     char bc_unit[UNIT_MAX];
+    float latitude;
+    float longitude;
     float pm25;    
     float pm10;
     float o3;    

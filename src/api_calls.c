@@ -27,11 +27,11 @@ static void api_init(void)
 	initialised = 1;
 }
 
-static void fetch_data(char *request, void *response)
+static void fetch_data(const char *request, void *response)
 {
     CURL *curl_handle;
     CURLcode curl_response;
-
+    
     api_init();
     curl_handle = curl_easy_init();
     if (curl_handle)
@@ -56,7 +56,7 @@ void api_fetch_countries(void *response)
     fetch_data(request, response);
 }
 
-void api_fetch_cities(char *country, void *response)
+void api_fetch_cities(const char *country, void *response)
 {
     char request[MAX_REQUEST_SIZE];
 
@@ -70,7 +70,7 @@ void api_fetch_cities(char *country, void *response)
     fetch_data(request, response);
 }
 
-void api_fetch_locations_by_city(char *city, void *response)
+void api_fetch_locations_by_city(const char *city, void *response)
 {
     CURL *curl_handle; 
     curl_handle = curl_easy_init();
@@ -90,22 +90,42 @@ void api_fetch_locations_by_city(char *city, void *response)
     fetch_data(request, response);
 }
 
-void api_fetch_latest_by_city(char *city, void *response)
+void api_fetch_latest_by_city(const char *city, void *response)
 {
     CURL *curl_handle;
     curl_handle = curl_easy_init();
     char request[MAX_REQUEST_SIZE];
     char *city_urlencoded;
 
-    if (strlen(city) + strlen(URL_LATEST) > MAX_REQUEST_SIZE -1)
+    if (strlen(city) + strlen(URL_LATEST_BY_CITY) > MAX_REQUEST_SIZE - 1)
     {
         printf("City name too long.\n");
         return;
     }
 
     city_urlencoded = curl_easy_escape(curl_handle, city, 0);
-    sprintf(request, URL_LATEST, city_urlencoded);
+    sprintf(request, URL_LATEST_BY_CITY, city_urlencoded);
     curl_free(city_urlencoded);
+    curl_easy_cleanup(curl_handle);
+    fetch_data(request, response);
+}
+
+void api_fetch_latest_by_location(const char *location, void *response)
+{
+    CURL *curl_handle;
+    curl_handle = curl_easy_init();
+    char request[MAX_REQUEST_SIZE];
+    char *location_urlencoded;
+
+    if (strlen(location) + strlen(URL_LATEST_BY_LOCATION) > MAX_REQUEST_SIZE - 1)
+    {
+        printf("Location name too long.\n");
+        return;
+    }
+
+    location_urlencoded = curl_easy_escape(curl_handle, location, 0);
+    sprintf(request, URL_LATEST_BY_LOCATION, location_urlencoded);
+    curl_free(location_urlencoded);
     curl_easy_cleanup(curl_handle);
     fetch_data(request, response);
 }
