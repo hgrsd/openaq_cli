@@ -22,7 +22,7 @@ void init_data(response_data_t *data)
     data->size = 0;
 }
 
-void init_measurements(measurements_t *target, int size)
+void init_measurements(measurements_t *target, size_t size)
 {
     target->size = size;
     for (int i = 0; i < size; i++)

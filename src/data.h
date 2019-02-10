@@ -41,9 +41,13 @@ struct _measurements_t
 };
 typedef struct _measurements_t measurements_t;
 
+// Clears a previously initialised and/or previously used response_data_t structure
 void clear_data(response_data_t *data);
+// Initialises a declared, unused response_data_t structure. Must be called before using the structure.
 void init_data(response_data_t *data);
-void init_measurements(measurements_t *target, int size);
+// Initialises an array of measurements. Must be called before using the structure.
+void init_measurements(measurements_t *target, size_t size);
+// Prints all measurements contained in the structure passed in.
 void print_measurements(measurements_t *source);
 
 #endif
