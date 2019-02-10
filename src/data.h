@@ -27,13 +27,13 @@ struct _measurement_t
     char bc_unit[UNIT_MAX];
     float latitude;
     float longitude;
-    float pm25;    
-    float pm10;
-    float o3;    
-    float so2;    
-    float no2;    
-    float co;    
-    float bc;
+    double pm25;    
+    double pm10;
+    double o3;    
+    double so2;    
+    double no2;    
+    double co;    
+    double bc;
 };
 
 typedef struct _measurement_t measurement_t;

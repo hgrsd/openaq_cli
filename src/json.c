@@ -60,37 +60,37 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
             
             if (strcmp(parameter_string, "pm25") == 0)
             {
-                target->measurements_array[i].pm25 = json_real_value(value);
+                target->measurements_array[i].pm25 = json_number_value(value);
                 strcpy_s(target->measurements_array[i].pm25_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "pm10") == 0)
             {
-                target->measurements_array[i].pm10 = json_real_value(value);
+                target->measurements_array[i].pm10 = json_number_value(value);
                 strcpy_s(target->measurements_array[i].pm10_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "o3") == 0)
             {
-                target->measurements_array[i].o3 = json_real_value(value);
+                target->measurements_array[i].o3 = json_number_value(value);
                 strcpy_s(target->measurements_array[i].o3_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "so2") == 0)
             {
-                target->measurements_array[i].so2 = json_real_value(value);
+                target->measurements_array[i].so2 = json_number_value(value);
                 strcpy_s(target->measurements_array[i].so2_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "no2") == 0)
             {
-                target->measurements_array[i].no2 = json_real_value(value);
+                target->measurements_array[i].no2 = json_number_value(value);
                 strcpy_s(target->measurements_array[i].no2_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "co") == 0)
             {
-                target->measurements_array[i].co = json_real_value(value);
+                target->measurements_array[i].co = json_number_value(value);
                 strcpy_s(target->measurements_array[i].co_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "bc") == 0)
             {
-                target->measurements_array[i].bc = json_real_value(value);
+                target->measurements_array[i].bc = json_number_value(value);
                 strcpy_s(target->measurements_array[i].bc_unit, json_string_value(unit), UNIT_MAX);
             }
             else
