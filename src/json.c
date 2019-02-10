@@ -22,8 +22,9 @@ static json_t *get_results(const char *raw_data, json_t *root)
 void json_extract_measurements(const char *raw_data, measurements_t *target)
 {
     json_t *root, *results, *entry, *location, *measurements, *coordinates, *latitude, *longitude;
-    json_t *measurement_line, *parameter, *date, *value, *unit;
+    json_t *measurement_line, *parameter, *date, *json_value, *unit;
     json_error_t error;
+    double val;
     int array_size;
     const char *parameter_string;
    
@@ -55,42 +56,44 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
             date = json_object_get(measurement_line, "lastUpdated");
             strcpy_s(target->measurements_array[i].date, json_string_value(date), DATE_MAX);
             parameter_string = json_string_value(parameter);
-            value = json_object_get(measurement_line, "value");
+            json_value = json_object_get(measurement_line, "value");
             unit = json_object_get(measurement_line, "unit");
-            
+            val = json_number_value(json_value);
+            if (val < 0)
+                continue;
             if (strcmp(parameter_string, "pm25") == 0)
             {
-                target->measurements_array[i].pm25 = json_number_value(value);
+                target->measurements_array[i].pm25 = val;
                 strcpy_s(target->measurements_array[i].pm25_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "pm10") == 0)
             {
-                target->measurements_array[i].pm10 = json_number_value(value);
+                target->measurements_array[i].pm10 = val;
                 strcpy_s(target->measurements_array[i].pm10_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "o3") == 0)
             {
-                target->measurements_array[i].o3 = json_number_value(value);
+                target->measurements_array[i].o3 = val;
                 strcpy_s(target->measurements_array[i].o3_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "so2") == 0)
             {
-                target->measurements_array[i].so2 = json_number_value(value);
+                target->measurements_array[i].so2 = val;
                 strcpy_s(target->measurements_array[i].so2_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "no2") == 0)
             {
-                target->measurements_array[i].no2 = json_number_value(value);
+                target->measurements_array[i].no2 = val;
                 strcpy_s(target->measurements_array[i].no2_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "co") == 0)
             {
-                target->measurements_array[i].co = json_number_value(value);
+                target->measurements_array[i].co = val;
                 strcpy_s(target->measurements_array[i].co_unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "bc") == 0)
             {
-                target->measurements_array[i].bc = json_number_value(value);
+                target->measurements_array[i].bc = val;
                 strcpy_s(target->measurements_array[i].bc_unit, json_string_value(unit), UNIT_MAX);
             }
             else
