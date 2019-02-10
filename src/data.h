@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-#define LOCATION_MAX 40
+#define LOCATION_MAX 128
 #define DATE_MAX 30
 #define UNIT_MAX 12
 
