@@ -10,6 +10,8 @@ void list_countries(void)
     init_data(&raw_data);
     api_fetch_countries(&raw_data);
     json_extract_countries(raw_data.data);
+    
+    clear_data(&raw_data);
 }
 
 void list_cities_by_country(char *country)
@@ -19,6 +21,8 @@ void list_cities_by_country(char *country)
     init_data(&raw_data);
     api_fetch_cities(country, &raw_data);
     json_extract_cities(raw_data.data);
+
+    clear_data(&raw_data);
 }
 
 void fetch_latest_by_city(char *city)
@@ -30,6 +34,8 @@ void fetch_latest_by_city(char *city)
     api_fetch_latest_by_city(city, &raw_data);
     json_extract_measurements(raw_data.data, &measurements_data);
     print_measurements(&measurements_data);
+
+    clear_data(&raw_data);
     free(measurements_data.measurements_array);
 }
 
