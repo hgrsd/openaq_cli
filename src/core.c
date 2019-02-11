@@ -12,8 +12,8 @@
 measurement_t *find_highest(measurements_t *measurements_data, parameter_t parameter)
 {
     void *base;
-    float max = -1;
-    float val;
+    double max = -1;
+    double val;
     measurement_t *highest = NULL;
     size_t offset = offsets[parameter];
     
@@ -26,11 +26,11 @@ measurement_t *find_highest(measurements_t *measurements_data, parameter_t param
     for (int i = 0; i < measurements_data->size; i++)
     {
         base = measurements_data->measurements_array + i;
-        val = *(float *)(base + offset);
+        val = *(double *)(base + offset);
         if (val > max)
         {
             max = val;
-            highest = &(measurements_data->measurements_array[i]);
+            highest = base;
         }    
     }
 
