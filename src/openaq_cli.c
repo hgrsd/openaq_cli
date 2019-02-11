@@ -61,6 +61,16 @@ int main(int argc, char *argv[])
         }
         fetch_latest_by_location(argv[2]);
     }
+    else if (!strcmp(argv[1], FIND_HIGHEST_BY_CITY))
+    {
+        if (argc < 4)
+        {
+            puts("No city and/or parameter specified.");
+            print_info(argv[0]);
+            return 1;
+        }
+        find_highest_by_city(argv[2], argv[3]);
+    }
     else
     {
         print_info(argv[0]);

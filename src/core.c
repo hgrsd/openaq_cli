@@ -1,7 +1,41 @@
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stddef.h>
+
 #include "api_calls.h"
 #include "data.h"
 #include "json.h"
 #include "core.h"
+#include "string_util.h"
+
+measurement_t *find_highest(measurements_t *measurements_data, parameter_t parameter)
+{
+    void *base;
+    float max = -1;
+    float val;
+    measurement_t *highest = NULL;
+    size_t offset = offsets[parameter];
+    
+    if (offset == 0)
+    {
+        printf("Invalid parameter. Valid parameters are: PM25, PM10, NO2, CO, BC, O3, SO2.\n");
+        return NULL;
+    }
+    
+    for (int i = 0; i < measurements_data->size; i++)
+    {
+        base = measurements_data->measurements_array + i;
+        val = *(float *)(base + offset);
+        if (val > max)
+        {
+            max = val;
+            highest = &(measurements_data->measurements_array[i]);
+        }    
+    }
+
+    return highest;
+}
 
 void list_countries(void)
 {   
@@ -62,4 +96,27 @@ void fetch_latest_by_location(const char *location)
 
     clear_data(&raw_data);
     free(measurements_data.measurements_array);
+}
+
+void find_highest_by_city(const char *city, const char *parameter)
+{
+    response_data_t raw_data;
+    measurements_t measurements_data = {NULL, 0};
+
+    measurement_t *highest;
+
+    init_data(&raw_data);
+    api_fetch_latest_by_city(city, &raw_data);
+    json_extract_measurements(raw_data.data, &measurements_data);
+
+    highest = find_highest(&measurements_data, string_to_param(parameter));
+    if (highest != NULL)
+    {
+        printf("Highest amount of %s found in the following location: \n", parameter);
+        print_measurement(highest);
+    }
+    else
+    {
+        printf("Not found.\n");
+    }
 }

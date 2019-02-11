@@ -2,10 +2,24 @@
 #define _DATA_H_
 
 #include <stdlib.h>
+#include <stddef.h>
 
 #define LOCATION_MAX 128
 #define DATE_MAX 30
 #define UNIT_MAX 12
+
+enum parameter
+{
+    PARAM_PM25,
+    PARAM_PM10,
+    PARAM_O3,
+    PARAM_SO2,
+    PARAM_NO2,
+    PARAM_CO,
+    PARAM_BC,
+    PARAM_INVALID
+};
+typedef enum parameter parameter_t;
 
 struct _response_data_t
 {
@@ -35,8 +49,10 @@ struct _measurement_t
     double co;    
     double bc;
 };
-
 typedef struct _measurement_t measurement_t;
+
+extern size_t offsets[];
+
 
 struct _measurements_t
 {
@@ -51,7 +67,12 @@ void clear_data(response_data_t *data);
 void init_data(response_data_t *data);
 // Initialises an array of measurements. Must be called before using the structure.
 void init_measurements(measurements_t *target, int nmemb);
+// Prints a single measurement 
+void print_measurement(measurement_t *measurement);
 // Prints all measurements contained in the structure passed in.
 void print_measurements(measurements_t *source);
+
+// returns parameter_t enum based on string input
+parameter_t string_to_param(const char *string);
 
 #endif
