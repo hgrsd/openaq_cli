@@ -116,7 +116,8 @@ void find_highest_by_city(const char *city, const char *parameter)
         print_measurement(highest);
     }
     else
-    {
         printf("Not found.\n");
-    }
+
+    clear_data(&raw_data);
+    free(measurements_data.measurements_array);
 }
