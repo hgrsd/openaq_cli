@@ -75,4 +75,8 @@ void print_measurements(measurements_t *source);
 // returns parameter_t enum based on string input
 parameter_t string_to_param(const char *string);
 
+// returns pointer to the measurement_t struct with the highest value for the specified parameter
+measurement_t *find_highest(measurements_t *measurements_data, parameter_t parameter);
+
+
 #endif

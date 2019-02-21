@@ -104,3 +104,31 @@ void print_measurements(measurements_t *source)
     }
 }
 
+measurement_t *find_highest(measurements_t *measurements_data, parameter_t parameter)
+{
+    void *base;
+    double max = -1;
+    double val;
+    measurement_t *highest = NULL;
+    size_t offset = offsets[parameter];
+    
+    if (offset == 0)
+    {
+        printf("Invalid parameter. Valid parameters are: PM25, PM10, NO2, CO, BC, O3, SO2.\n");
+        return NULL;
+    }
+    
+    for (int i = 0; i < measurements_data->size; i++)
+    {
+        base = measurements_data->measurements_array + i;
+        val = *(double *)(base + offset);
+        if (val > max)
+        {
+            max = val;
+            highest = base;
+        }    
+    }
+
+    return highest;
+}
+
