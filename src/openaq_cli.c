@@ -71,6 +71,16 @@ int main(int argc, char *argv[])
         }
         find_highest_by_city(argv[2], argv[3]);
     }
+    else if (!strcmp(argv[1], FIND_HIGHEST_BY_COUNTRY))
+    {
+        if (argc < 4)
+        {
+            puts("No country code and/or parameter specified.");
+            print_info(argv[0]);
+            return 1;
+        }
+        find_highest_by_country(argv[2], argv[3]);
+    }
     else
     {
         print_info(argv[0]);

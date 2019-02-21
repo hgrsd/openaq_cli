@@ -90,6 +90,23 @@ void api_fetch_locations_by_city(const char *city, void *response)
     fetch_data(request, response);
 }
 
+void api_fetch_latest_by_country(const char *country_code, void *response)
+{
+    CURL *curl_handle;
+    curl_handle = curl_easy_init();
+    char request[MAX_REQUEST_SIZE];
+
+    if (strlen(country_code) + strlen(URL_LATEST_BY_COUNTRY) > MAX_REQUEST_SIZE - 1)
+    {
+        printf("Country code too long.\n");
+        return;
+    }
+
+    sprintf(request, URL_LATEST_BY_COUNTRY, country_code);
+    curl_easy_cleanup(curl_handle);
+    fetch_data(request, response);
+}
+
 void api_fetch_latest_by_city(const char *city, void *response)
 {
     CURL *curl_handle;

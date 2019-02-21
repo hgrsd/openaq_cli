@@ -13,6 +13,8 @@ void fetch_latest_by_city(const char *city);
 void fetch_latest_by_location(const char *location);
 
 // finds location within city with highest amount of parameter specified, prints to stdout
-void find_highest_by_city(const char* city, const char *parameter);
+void find_highest_by_city(const char *city, const char *parameter);
+// finds location within country with highest amount of parameter specified, prints to stdout
+void find_highest_by_country(const char *country_code, const char *parameter);
 
 #endif

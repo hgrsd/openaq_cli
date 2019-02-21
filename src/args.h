@@ -7,6 +7,7 @@
 #define FETCH_LATEST_BY_CITY "city-fetch-latest"
 #define FETCH_LATEST_BY_LOCATION "location-fetch-latest"
 #define FIND_HIGHEST_BY_CITY "city-find-highest"
+#define FIND_HIGHEST_BY_COUNTRY "country-find-highest"
 #define HELP "help"
 
 void print_info(char *program_name);

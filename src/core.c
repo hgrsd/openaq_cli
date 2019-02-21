@@ -98,6 +98,30 @@ void fetch_latest_by_location(const char *location)
     free(measurements_data.measurements_array);
 }
 
+void find_highest_by_country(const char *country_code, const char *parameter)
+{
+    response_data_t raw_data;
+    measurements_t measurements_data = {NULL, 0};
+
+    measurement_t *highest;
+
+    init_data(&raw_data);
+    api_fetch_latest_by_country(country_code, &raw_data);
+    json_extract_measurements(raw_data.data, &measurements_data);
+
+    highest = find_highest(&measurements_data, string_to_param(parameter));
+    if (highest != NULL)
+    {
+        printf("Highest amount of %s found in the following location: \n", parameter);
+        print_measurement(highest);
+    }
+    else
+        printf("Not found.\n");
+
+    clear_data(&raw_data);
+    free(measurements_data.measurements_array);
+}
+
 void find_highest_by_city(const char *city, const char *parameter)
 {
     response_data_t raw_data;
