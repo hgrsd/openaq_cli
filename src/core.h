@@ -8,9 +8,9 @@ void list_cities_by_country(const char *country);
 // fetches list of locations in city and available parameters, prints it to stdout
 void list_locations_by_city(const char *city);
 // fetches latest measurements for city and prints them to stdout
-void fetch_latest_by_city(const char *city);
+void print_latest_by_city(const char *city);
 // fetches latest measurements for location and prints them to stdout
-void fetch_latest_by_location(const char *location);
+void print_latest_by_location(const char *location);
 
 // finds location within city with highest amount of parameter specified, prints to stdout
 void find_highest_by_city(const char *city, const char *parameter);
