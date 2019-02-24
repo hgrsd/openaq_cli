@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
         print_info(argv[0]);
         return 1;
     } 
+
     if (!strcmp(argv[1], HELP))
     {
         print_info(argv[0]);
@@ -86,5 +87,6 @@ int main(int argc, char *argv[])
         print_info(argv[0]);
         return 1;
     }
+    
     return 0;
 }

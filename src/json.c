@@ -21,16 +21,18 @@ static json_t *get_results(const char *raw_data, json_t *root)
 
 void json_extract_measurements(const char *raw_data, measurements_t *target)
 {
-    json_t *root, *results, *entry, *location, *measurements, *coordinates, *latitude, *longitude;
-    json_t *measurement_line, *parameter, *date, *json_value, *unit;
-    json_error_t error;
     double val;
     int array_size;
     const char *parameter_string;
-   
+    
+    json_t *root, *results, *entry, *location, *measurements, *coordinates, *latitude, *longitude;
+    json_t *measurement_line, *parameter, *date, *json_value, *unit;
+    json_error_t error; 
+    
     root = json_loads(raw_data, 0, &error);
     results = get_results(raw_data, root);    
     array_size = json_array_size(results);
+    
     if (target->measurements_array != NULL)
         free(target->measurements_array);
     target->measurements_array = (measurement_t *) malloc(sizeof(measurement_t) * array_size);
@@ -39,7 +41,6 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
     for (int i = 0; i < array_size; i++)
     {
         entry = json_array_get(results, i);
-
         location = json_object_get(entry, "location");
         strcpy_s(target->measurements_array[i].location, json_string_value(location), LOCATION_MAX);  
         coordinates = json_object_get(entry, "coordinates");
@@ -47,18 +48,19 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
         longitude = json_object_get(coordinates, "longitude");    
         target->measurements_array[i].latitude = json_real_value(latitude); 
         target->measurements_array[i].longitude = json_real_value(longitude);  
-
         measurements = json_object_get(entry, "measurements");
+        
         for (int j = 0; j < json_array_size(measurements); j++)
         {
             measurement_line = json_array_get(measurements, j);
             parameter = json_object_get(measurement_line, "parameter");
             date = json_object_get(measurement_line, "lastUpdated");
-            strcpy_s(target->measurements_array[i].date, json_string_value(date), DATE_MAX);
             parameter_string = json_string_value(parameter);
             json_value = json_object_get(measurement_line, "value");
             unit = json_object_get(measurement_line, "unit");
             val = json_number_value(json_value);
+
+            strcpy_s(target->measurements_array[i].date, json_string_value(date), DATE_MAX);
             if (val < 0)
                 continue;
             if (strcmp(parameter_string, "pm25") == 0)

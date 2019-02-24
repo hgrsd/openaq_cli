@@ -76,6 +76,7 @@ void print_measurement(measurement_t *measurement)
     printf("Date: \t\t\t%s\n", measurement->date);
     printf("Latitude:\t\t%f\n", measurement->latitude);
     printf("Longitude:\t\t%f\n", measurement->longitude);
+    
     if (measurement->bc != -1)
         print_value("BC", measurement->bc, measurement->bc_unit);
     if (measurement->co != -1)
@@ -90,6 +91,7 @@ void print_measurement(measurement_t *measurement)
         print_value("PM25", measurement->pm25, measurement->pm25_unit);
     if (measurement->so2 != -1)
         print_value("SO2", measurement->so2, measurement->so2_unit);
+        
     printf("\n");
 }
 
@@ -109,9 +111,9 @@ measurement_t *find_highest(measurements_t *measurements_data, parameter_t param
     void *base;
     double max = -1;
     double val;
-    measurement_t *highest = NULL;
     size_t offset = offsets[parameter];
-    
+    measurement_t *highest = NULL;
+        
     if (offset == 0)
     {
         printf("Invalid parameter. Valid parameters are: PM25, PM10, NO2, CO, BC, O3, SO2.\n");
