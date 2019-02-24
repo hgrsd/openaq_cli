@@ -42,7 +42,7 @@ void list_locations_by_city(const char *city)
     clear_data(&raw_data);   
 }
 
-void fetch_latest_by_city(const char *city)
+void print_latest_by_city(const char *city)
 {
     response_data_t raw_data;
     measurements_t measurements_data = {NULL, 0};
@@ -56,7 +56,7 @@ void fetch_latest_by_city(const char *city)
     free(measurements_data.measurements_array);
 }
 
-void fetch_latest_by_location(const char *location)
+void print_latest_by_location(const char *location)
 {
     response_data_t raw_data;
     measurements_t measurements_data = {NULL, 0};

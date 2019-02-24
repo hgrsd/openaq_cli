@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
         }
         list_locations_by_city(argv[2]);
     }
-    else if (!strcmp(argv[1], FETCH_LATEST_BY_CITY))
+    else if (!strcmp(argv[1], PRINT_LATEST_BY_CITY))
     {
         if (argc < 3)
         {
@@ -49,9 +49,9 @@ int main(int argc, char *argv[])
             print_info(argv[0]);
             return 1;
         }
-        fetch_latest_by_city(argv[2]);
+        print_latest_by_city(argv[2]);
     }
-    else if (!strcmp(argv[1], FETCH_LATEST_BY_LOCATION))
+    else if (!strcmp(argv[1], PRINT_LATEST_BY_LOCATION))
     {
         if (argc < 3)
         {
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
             print_info(argv[0]);
             return 1;
         }
-        fetch_latest_by_location(argv[2]);
+        print_latest_by_location(argv[2]);
     }
     else if (!strcmp(argv[1], FIND_HIGHEST_BY_CITY))
     {
