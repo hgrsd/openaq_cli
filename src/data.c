@@ -59,15 +59,23 @@ void init_measurements(measurements_t *target, int nmemb)
     for (int i = 0; i < nmemb; i++)
     {
         strcpy(target->measurements_array[i].location, "\0");
+        strcpy(target->measurements_array[i].date, "\0");
         target->measurements_array[i].latitude = 0;
         target->measurements_array[i].longitude = 0;
         target->measurements_array[i].bc = -1;
+        strcpy(target->measurements_array[i].bc_unit, "\0");
         target->measurements_array[i].co = -1;
+        strcpy(target->measurements_array[i].co_unit, "\0");
         target->measurements_array[i].no2 = -1;
+        strcpy(target->measurements_array[i].no2_unit, "\0");
         target->measurements_array[i].o3 = -1;
+        strcpy(target->measurements_array[i].o3_unit, "\0");
         target->measurements_array[i].pm10 = -1;
+        strcpy(target->measurements_array[i].pm10_unit, "\0");
         target->measurements_array[i].pm25 = -1;
+        strcpy(target->measurements_array[i].pm25_unit, "\0");
         target->measurements_array[i].so2 = -1;
+        strcpy(target->measurements_array[i].so2_unit, "\0");
     }
 }
 

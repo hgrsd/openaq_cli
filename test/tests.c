@@ -8,7 +8,7 @@
 #include "../src/data.h"
 #include "../src/json.h"
 
-void TEST_find_highest(void)
+void TEST_data_find_highest(void)
 {
     measurement_t *highest;
     measurements_t measurements_data = {NULL, 0};
@@ -31,7 +31,7 @@ void TEST_find_highest(void)
     highest = find_highest(&measurements_data, string_to_param("PM25"));
     assert(highest == NULL);
 
-    printf("    *** [PASSED]\n\n");
+    printf("    [PASS]\n\n");
 }
 
 void TEST_json_extract_cities(void)
@@ -51,7 +51,7 @@ void TEST_json_extract_cities(void)
     json_extract_cities(JSON_CITIES_TEST_MALFORMED, &cities_data);
     assert(cities_data.size == 0);
 
-    printf("    *** [PASSED]\n\n");
+    printf("    [PASS]\n\n");
 }
 
 void TEST_json_extract_locations(void)
@@ -89,7 +89,7 @@ void TEST_json_extract_locations(void)
     json_extract_locations(JSON_LOCATIONS_TEST_MALFORMED, &locations_data);
     assert(locations_data.size == 0);
 
-    printf("    *** [PASSED]\n\n");
+    printf("    [PASS]\n\n");
 }
 
 void TEST_json_extract_countries(void)
@@ -118,7 +118,7 @@ void TEST_json_extract_countries(void)
     json_extract_countries(JSON_COUNTRIES_TEST_MALFORMED, &countries_data);
     assert(countries_data.size == 0);
 
-    printf("    *** [PASSED]\n\n");
+    printf("    [PASS]\n\n");
 }
 
 void TEST_json_extract_measurements(void)
@@ -165,16 +165,102 @@ void TEST_json_extract_measurements(void)
     assert(measurements_data.measurements_array[0].co == -1);
 
 
-    printf("    *** [PASSED]\n\n");
+    printf("    [PASS]\n\n");
 }
 
+void TEST_data_string_to_param(void)
+{
+    parameter_t return_value;
+
+    printf("[+] Testing string_to_param()\n");
+
+    return_value = string_to_param("PM25");
+    assert(return_value == PARAM_PM25);
+    return_value = string_to_param("PM10");
+    assert(return_value == PARAM_PM10);
+    return_value = string_to_param("NO2");
+    assert(return_value == PARAM_NO2);
+    return_value = string_to_param("CO");
+    assert(return_value == PARAM_CO);
+    return_value = string_to_param("BC");
+    assert(return_value == PARAM_BC);
+    return_value = string_to_param("O3");
+    assert(return_value == PARAM_O3);
+    return_value = string_to_param("SO2");
+    assert(return_value == PARAM_SO2);
+    return_value = string_to_param("THISISWRONG");
+    assert(return_value == PARAM_INVALID);  
+
+    printf("    [PASS]\n\n");
+}
+
+void TEST_data_init_measurements(void)
+{
+    measurements_t measurements_data;
+    measurements_data.measurements_array = (measurement_t *) malloc(sizeof(measurement_t) * 5);
+
+    printf("[+] Testing init_measurements()\n");
+
+    init_measurements(&measurements_data, 5);
+
+    for (int i = 0; i < 5; i++)
+    {
+        assert(strcmp(measurements_data.measurements_array[i].location, "\0") == 0);
+        assert(strcmp(measurements_data.measurements_array[i].date, "\0") == 0);
+        assert(strcmp(measurements_data.measurements_array[i].bc_unit, "\0") == 0);
+        assert(strcmp(measurements_data.measurements_array[i].co_unit, "\0") == 0);
+        assert(strcmp(measurements_data.measurements_array[i].no2_unit, "\0") == 0);
+        assert(strcmp(measurements_data.measurements_array[i].o3_unit, "\0") == 0);
+        assert(strcmp(measurements_data.measurements_array[i].pm10_unit, "\0") == 0);
+        assert(strcmp(measurements_data.measurements_array[i].pm25_unit, "\0") == 0);
+        assert(strcmp(measurements_data.measurements_array[i].so2_unit, "\0") == 0);
+        assert(measurements_data.measurements_array[i].bc == -1);
+        assert(measurements_data.measurements_array[i].co == -1);
+        assert(measurements_data.measurements_array[i].no2 == -1);
+        assert(measurements_data.measurements_array[i].o3 == -1);
+        assert(measurements_data.measurements_array[i].pm10 == -1);
+        assert(measurements_data.measurements_array[i].pm25 == -1);
+        assert(measurements_data.measurements_array[i].so2 == -1);
+    }
+
+    printf("    [PASS]\n\n");
+
+}
+
+void TEST_data_init_locations()
+{
+    locations_t locations_data;
+    locations_data.locations_array = (location_t *) malloc(sizeof(location_t) * 5); 
+
+    printf("[+] Testing init_locations()\n");
+
+    init_locations(&locations_data, 5);
+    for(int i = 0; i < 5; i++)
+    {
+        assert(strcmp(locations_data.locations_array[i].name, "\0") == 0);
+        assert(strcmp(locations_data.locations_array[i].country_code, "\0") == 0);
+        assert(locations_data.locations_array[i].has_bc == 0);
+        assert(locations_data.locations_array[i].has_co == 0);
+        assert(locations_data.locations_array[i].has_no2 == 0);
+        assert(locations_data.locations_array[i].has_o3 == 0);
+        assert(locations_data.locations_array[i].has_pm10 == 0);
+        assert(locations_data.locations_array[i].has_pm25 == 0);
+        assert(locations_data.locations_array[i].has_so2 == 0);
+    }
+
+    printf("    [PASS]\n\n");
+}
 
 int main(void)
-{
+{   
+    printf("\n> RUNNING OPENAQ_CLI TEST SUITE\n\n");
+    TEST_data_string_to_param();
+    TEST_data_init_measurements();
+    TEST_data_init_locations();
     TEST_json_extract_cities();
     TEST_json_extract_locations();
     TEST_json_extract_countries();
     TEST_json_extract_measurements();
-    TEST_find_highest();
+    TEST_data_find_highest();   
 }
 
