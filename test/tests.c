@@ -4,12 +4,9 @@
 
 #include "tests.h"
 
-#include "../src/api_calls.h"
-#include "../src/args.h"
 #include "../src/core.h"
 #include "../src/data.h"
 #include "../src/json.h"
-#include "../src/string_util.h"
 
 void TEST_find_highest(void)
 {
