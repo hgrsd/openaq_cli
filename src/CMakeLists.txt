@@ -1,8 +1,3 @@
-if(APPLE)
-	link_directories(/usr/local/lib)
-	include_directories(/usr/local/include)
-endif()
-
 add_library (openaq_lib
 			core.c
 			data.c

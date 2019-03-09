@@ -42,6 +42,16 @@ int main(int argc, char *argv[])
         }
         list_locations_by_city(argv[2]);
     }
+    else if (!strcmp(argv[1], PRINT_LATEST_BY_COUNTRY))
+    {
+        if (argc < 3)
+        {
+            puts("No country code specified.");
+            print_info(argv[0]);
+            return 1;
+        }
+        print_latest_by_country(argv[2]);
+    }
     else if (!strcmp(argv[1], PRINT_LATEST_BY_CITY))
     {
         if (argc < 3)

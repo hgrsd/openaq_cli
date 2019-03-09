@@ -54,6 +54,21 @@ void list_locations_by_city(const char *city)
     free(locations_data.locations_array);
 }
 
+void print_latest_by_country(const char *country)
+{
+    response_data_t raw_data;
+    measurements_t measurements_data = {NULL, 0};
+
+    init_data(&raw_data);
+    api_fetch_latest_by_country(country, &raw_data);
+    json_extract_measurements(raw_data.data, &measurements_data);
+
+    print_measurements(&measurements_data);
+
+    clear_data(&raw_data);
+    free(measurements_data.measurements_array);
+}
+
 void print_latest_by_city(const char *city)
 {
     response_data_t raw_data;

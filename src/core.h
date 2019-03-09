@@ -7,6 +7,9 @@ void list_countries(void);
 void list_cities_by_country(const char *country);
 // fetches list of locations in city and available parameters, prints it to stdout
 void list_locations_by_city(const char *city);
+
+// fetches latest measurements for country and prints them to stdout
+void print_latest_by_country(const char *country);
 // fetches latest measurements for city and prints them to stdout
 void print_latest_by_city(const char *city);
 // fetches latest measurements for location and prints them to stdout
