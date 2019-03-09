@@ -39,6 +39,10 @@ void TEST_json_extract_cities(void)
     assert(strcmp(cities_data.cities_array[2].name, "Eskdalemuir") == 0);
     assert(cities_data.cities_array[4].n_locations == 2);
 
+    // malformed
+    json_extract_cities(JSON_CITIES_TEST_MALFORMED, &cities_data);
+    assert(cities_data.size == 0);
+
     printf("    *** [PASSED]\n\n");
 }
 
@@ -72,6 +76,12 @@ void TEST_json_extract_locations(void)
     assert(locations_data.locations_array[1].has_no2 == 1);
     assert(locations_data.locations_array[4].latitude == 41.32247);
     assert(locations_data.locations_array[4].longitude == -95.93799);
+
+    // malformed
+    json_extract_locations(JSON_LOCATIONS_TEST_MALFORMED, &locations_data);
+    assert(locations_data.size == 0);
+
+
     
     printf("    *** [PASSED]\n\n");
 }
@@ -79,14 +89,11 @@ void TEST_json_extract_locations(void)
 void TEST_json_extract_countries(void)
 {
     countries_t countries_data = {NULL, 0};
-    countries_t countries_malformed = {NULL, 0};
     
     printf("[+] Testing json_extract_countries()\n");
 
     json_extract_countries(JSON_COUNTRIES_TEST, &countries_data);
-    json_extract_countries(JSON_COUNTRIES_TEST_MALFORMED, &countries_malformed);
    
-    // well-formed
     assert(countries_data.size == 4);
     assert(strcmp(countries_data.countries_array[0].name, "Andorra") == 0);
     assert(strcmp(countries_data.countries_array[0].country_code, "AD") == 0);
@@ -102,7 +109,8 @@ void TEST_json_extract_countries(void)
     assert(countries_data.countries_array[3].n_locations == 1);
 
     // malformed
-    assert(countries_malformed.size == 0);
+    json_extract_countries(JSON_COUNTRIES_TEST_MALFORMED, &countries_data);
+    assert(countries_data.size == 0);
 
     printf("    *** [PASSED]\n\n");
 }
@@ -131,6 +139,11 @@ void TEST_json_extract_measurements(void)
     assert(measurements_data.measurements_array[4].o3 == 0.016);
     assert(strcmp(measurements_data.measurements_array[4].o3_unit, "ppm") == 0);
     assert(measurements_data.measurements_array[4].pm25 == -1);
+
+
+    // malformed
+    json_extract_measurements(JSON_LATEST_TEST_MALFORMED, &measurements_data);
+    assert(measurements_data.size == 0);
 
     printf("    *** [PASSED]\n\n");
 }
