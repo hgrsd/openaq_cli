@@ -10,7 +10,6 @@ static json_t *get_results(const char *raw_data, json_t *root)
 
     if (!json_is_object(root))
     {
-        puts("error");
         json_decref(root);
         return NULL;
     }
@@ -28,41 +27,61 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
     json_t *root, *results, *entry, *location, *measurements, *coordinates, *latitude, *longitude;
     json_t *measurement_line, *parameter, *date, *json_value, *unit;
     json_error_t error; 
-    
-    root = json_loads(raw_data, 0, &error);
-    results = get_results(raw_data, root);    
-    array_size = json_array_size(results);
-    
+ 
     if (target->measurements_array != NULL)
+    {
+        target->size = 0;
         free(target->measurements_array);
+        target->measurements_array = NULL;
+    }
+   
+    root = json_loads(raw_data, 0, &error);
+    if (!strcmp(error.text, "\0") == 0)
+    {
+        json_decref(root);
+        return;
+    }
+
+    if ((results = get_results(raw_data, root)) == NULL)
+        return;
+
+    array_size = json_array_size(results);   
     target->measurements_array = (measurement_t *) malloc(sizeof(measurement_t) * array_size);
     init_measurements(target, array_size);
-    
     for (int i = 0; i < array_size; i++)
     {
         entry = json_array_get(results, i);
         location = json_object_get(entry, "location");
-        strcpy_s(target->measurements_array[i].location, json_string_value(location), LOCATION_MAX);  
+         
         coordinates = json_object_get(entry, "coordinates");
         latitude = json_object_get(coordinates, "latitude");     
-        longitude = json_object_get(coordinates, "longitude");    
+        longitude = json_object_get(coordinates, "longitude");
+
+        if (!json_is_number(latitude) || !json_is_number(longitude) || !json_is_string(location))
+            continue;
+
+        strcpy_s(target->measurements_array[i].location, json_string_value(location), LOCATION_MAX);     
         target->measurements_array[i].latitude = json_real_value(latitude); 
         target->measurements_array[i].longitude = json_real_value(longitude);  
-        measurements = json_object_get(entry, "measurements");
         
+        measurements = json_object_get(entry, "measurements");
+        if (!json_is_array(measurements))
+            continue;
         for (int j = 0; j < json_array_size(measurements); j++)
         {
             measurement_line = json_array_get(measurements, j);
             parameter = json_object_get(measurement_line, "parameter");
             date = json_object_get(measurement_line, "lastUpdated");
-            parameter_string = json_string_value(parameter);
             json_value = json_object_get(measurement_line, "value");
             unit = json_object_get(measurement_line, "unit");
             val = json_number_value(json_value);
+            
+            if (val < 0 || !json_is_number(json_value) || !json_is_string(unit) || !json_is_string(date) || !json_is_string(parameter))
+                continue;
+
+            parameter_string = json_string_value(parameter);   
 
             strcpy_s(target->measurements_array[i].date, json_string_value(date), DATE_MAX);
-            if (val < 0)
-                continue;
             if (strcmp(parameter_string, "pm25") == 0)
             {
                 target->measurements_array[i].pm25 = val;
@@ -112,13 +131,25 @@ void json_extract_cities(const char *raw_data, cities_t *target)
 
     json_t *root, *results, *entry, *city, *locations, *country_code;
     json_error_t error;
-
-    root = json_loads(raw_data, 0, &error);
-    results = get_results(raw_data, root);    
-    array_size = json_array_size(results);
-    
+   
     if (target->cities_array != NULL)
+    {
+        target->size = 0;
         free(target->cities_array);
+        target->cities_array = NULL;
+    }
+   
+    root = json_loads(raw_data, 0, &error);
+    if (!strcmp(error.text, "\0") == 0)
+    {
+        json_decref(root);
+        return;
+    }
+
+    if ((results = get_results(raw_data, root)) == NULL)
+        return;
+    
+    array_size = json_array_size(results);
     target->cities_array = (city_t *) malloc(sizeof(city_t) * array_size);
     init_cities(target, array_size);
     
@@ -131,7 +162,6 @@ void json_extract_cities(const char *raw_data, cities_t *target)
         strcpy_s(target->cities_array[i].name, json_string_value(city), CITY_MAX);
         strcpy_s(target->cities_array[i].country_code, json_string_value(country_code), COUNTRY_CODE_MAX);
         target->cities_array[i].n_locations = json_integer_value(locations);
-
     }
 
     json_decref(root);
@@ -145,12 +175,25 @@ void json_extract_locations(const char *raw_data, locations_t *target)
     json_t *root, *results, *entry, *location, *parameters, *parameter, *coordinates, *latitude, *longitude, *country_code, *city;
     json_error_t error;
 
-    root = json_loads(raw_data, 0, &error);
-    results = get_results(raw_data, root);    
-    array_size = json_array_size(results);
-    
     if (target->locations_array != NULL)
+    {
+        target->size = 0;
         free(target->locations_array);
+        target->locations_array = NULL;
+    }
+
+    root = json_loads(raw_data, 0, &error);
+    if (!strcmp(error.text, "\0") == 0)
+    {
+        json_decref(root);
+        return;
+    }
+
+    if ((results = get_results(raw_data, root)) == NULL)
+        return;
+    
+    array_size = json_array_size(results);
+
     target->locations_array = (location_t *) malloc(sizeof(location_t) * array_size);
     init_locations(target, array_size);
    
@@ -200,12 +243,25 @@ void json_extract_countries(const char *raw_data, countries_t *target)
     json_t *root, *results, *entry, *country, *country_code, *cities, *locations;
     json_error_t error;
 
-    root = json_loads(raw_data, 0, &error);
-    results = get_results(raw_data, root);    
-    array_size = json_array_size(results);
-    
     if (target->countries_array != NULL)
+    {
+        target->size = 0;
         free(target->countries_array);
+        target->countries_array = NULL;
+    }
+    
+    root = json_loads(raw_data, 0, &error);
+    if (!strcmp(error.text, "\0") == 0)
+    {
+        json_decref(root);
+        return;
+    }
+
+    if ((results = get_results(raw_data, root)) == NULL)
+        return;
+    
+    array_size = json_array_size(results);
+
     target->countries_array = (country_t *) malloc(sizeof(country_t) * array_size);
     init_countries(target, array_size);
 

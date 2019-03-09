@@ -23,7 +23,13 @@ void TEST_find_highest(void)
     highest = find_highest(&measurements_data, string_to_param("BC"));
     assert(highest == NULL);
 
-    free(measurements_data.measurements_array);
+    json_extract_measurements(JSON_LATEST_TEST_EMPTY, &measurements_data);
+    highest = find_highest(&measurements_data, string_to_param("CO"));
+    assert(highest->co == 2);
+
+    json_extract_measurements(JSON_LATEST_TEST_MALFORMED, &measurements_data);
+    highest = find_highest(&measurements_data, string_to_param("PM25"));
+    assert(highest == NULL);
 
     printf("    *** [PASSED]\n\n");
 }
@@ -83,8 +89,6 @@ void TEST_json_extract_locations(void)
     json_extract_locations(JSON_LOCATIONS_TEST_MALFORMED, &locations_data);
     assert(locations_data.size == 0);
 
-
-    
     printf("    *** [PASSED]\n\n");
 }
 
@@ -132,8 +136,11 @@ void TEST_json_extract_measurements(void)
     assert(measurements_data.measurements_array[0].co == 1300);
     assert(strcmp(measurements_data.measurements_array[0].co_unit, "µg/m³") == 0);
     assert(measurements_data.measurements_array[0].bc == -1);
+    assert(measurements_data.measurements_array[1].latitude == 0);
+    assert(measurements_data.measurements_array[1].longitude == 0);
     assert(strcmp(measurements_data.measurements_array[2].location, "1-r khoroolol") == 0);
     assert(measurements_data.measurements_array[2].pm10 == 103);
+    assert(measurements_data.measurements_array[2].co == -1);
     assert(strcmp(measurements_data.measurements_array[2].pm10_unit, "µg/m³") == 0);
     assert(measurements_data.measurements_array[2].latitude == 47.91798);
     assert(measurements_data.measurements_array[2].longitude == 106.84806);
@@ -146,6 +153,17 @@ void TEST_json_extract_measurements(void)
     // malformed
     json_extract_measurements(JSON_LATEST_TEST_MALFORMED, &measurements_data);
     assert(measurements_data.size == 0);
+
+    // empty parameters
+    json_extract_measurements(JSON_LATEST_TEST_EMPTY, &measurements_data);
+    assert(measurements_data.measurements_array[0].pm25 == -1);
+    assert(measurements_data.measurements_array[0].pm10 == -1);
+    assert(measurements_data.measurements_array[0].no2 == -1);
+    assert(measurements_data.measurements_array[0].so2 == -1);
+    assert(measurements_data.measurements_array[0].bc == -1);
+    assert(measurements_data.measurements_array[0].o3 == -1);
+    assert(measurements_data.measurements_array[0].co == -1);
+
 
     printf("    *** [PASSED]\n\n");
 }

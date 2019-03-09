@@ -58,6 +58,7 @@ void init_measurements(measurements_t *target, int nmemb)
     target->size = nmemb;
     for (int i = 0; i < nmemb; i++)
     {
+        strcpy(target->measurements_array[i].location, "\0");
         target->measurements_array[i].latitude = 0;
         target->measurements_array[i].longitude = 0;
         target->measurements_array[i].bc = -1;
@@ -75,6 +76,8 @@ void init_countries(countries_t *target, int nmemb)
     target->size = nmemb;
     for (int i = 0; i < nmemb; i++)
     {
+        strcpy(target->countries_array[i].name, "\0");
+        strcpy(target->countries_array[i].country_code, "\0");
         target->countries_array[i].n_cities = 0;
         target->countries_array[i].n_locations = 0;
     }
@@ -85,6 +88,8 @@ void init_cities(cities_t *target, int nmemb)
     target->size = nmemb;
     for (int i = 0; i < nmemb; i++)
     {
+        strcpy(target->cities_array[i].name, "\0");
+        strcpy(target->cities_array[i].country_code, "\0");
         target->cities_array[i].n_locations = 0;
     }
 }
@@ -94,6 +99,8 @@ void init_locations(locations_t *target, int nmemb)
     target->size = nmemb;
     for (int i = 0; i < nmemb; i++)
     {
+        strcpy(target->locations_array[i].name, "\0");
+        strcpy(target->locations_array[i].country_code, "\0");
         target->locations_array[i].has_pm25 = 0;
         target->locations_array[i].has_pm10 = 0;
         target->locations_array[i].has_bc = 0;
@@ -232,6 +239,9 @@ measurement_t *find_highest(measurements_t *measurements_data, parameter_t param
         printf("Invalid parameter. Valid parameters are: PM25, PM10, NO2, CO, BC, O3, SO2.\n");
         return NULL;
     }
+
+    if (measurements_data->size == 0)
+        return NULL;
     
     for (int i = 0; i < measurements_data->size; i++)
     {
