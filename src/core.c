@@ -12,34 +12,46 @@
 void list_countries(void)
 {   
     response_data_t raw_data;
+    countries_t countries_data = {NULL, 0};
 
     init_data(&raw_data);
     api_fetch_countries(&raw_data);
-    json_print_countries(raw_data.data);
+    json_extract_countries(raw_data.data, &countries_data);
     
+    print_countries(&countries_data);
+
     clear_data(&raw_data);
+    free(countries_data.countries_array);
 }
 
 void list_cities_by_country(const char *country)
 {
     response_data_t raw_data;
+    cities_t cities_data = {NULL, 0};
 
     init_data(&raw_data);
     api_fetch_cities(country, &raw_data);
-    json_print_cities(raw_data.data);
+    json_extract_cities(raw_data.data, &cities_data);
+
+    print_cities(&cities_data);
 
     clear_data(&raw_data);
+    free(cities_data.cities_array);
 }
 
 void list_locations_by_city(const char *city)
 {
     response_data_t raw_data;
+    locations_t locations_data = {NULL, 0};
 
     init_data(&raw_data);
     api_fetch_locations_by_city(city, &raw_data);
-    json_print_locations(raw_data.data);
+    json_extract_locations(raw_data.data, &locations_data);
+
+    print_locations(&locations_data);
 
     clear_data(&raw_data);   
+    free(locations_data.locations_array);
 }
 
 void print_latest_by_city(const char *city)
@@ -50,6 +62,7 @@ void print_latest_by_city(const char *city)
     init_data(&raw_data);
     api_fetch_latest_by_city(city, &raw_data);
     json_extract_measurements(raw_data.data, &measurements_data);
+
     print_measurements(&measurements_data);
 
     clear_data(&raw_data);
@@ -64,6 +77,7 @@ void print_latest_by_location(const char *location)
     init_data(&raw_data);
     api_fetch_latest_by_location(location, &raw_data);
     json_extract_measurements(raw_data.data, &measurements_data);
+    
     print_measurements(&measurements_data);
 
     clear_data(&raw_data);
