@@ -23,6 +23,8 @@ void TEST_find_highest(void)
     highest = find_highest(&measurements_data, string_to_param("BC"));
     assert(highest == NULL);
 
+    free(measurements_data.measurements_array);
+
     printf("    *** [PASSED]\n\n");
 }
 

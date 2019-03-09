@@ -122,7 +122,7 @@ void find_highest_by_city(const char *city, const char *parameter)
     highest = find_highest(&measurements_data, string_to_param(parameter));
     if (highest != NULL)
     {
-        printf("Highest amount of %s found in the following location: \n", parameter);
+        printf("\n[+] Highest amount of %s found in the following location: \n\n", parameter);
         print_measurement(highest);
     }
     else
