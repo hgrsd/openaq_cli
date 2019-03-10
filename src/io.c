@@ -118,6 +118,8 @@ void print_countries(countries_t *source)
 
 void print_measurement(measurement_t *measurement)
 {
+    printf("    * Country: \t\t\t%s\n", measurement->country_code);
+    printf("    * City: \t\t\t%s\n", measurement->city);
     printf("    * Location: \t\t%s\n", measurement->location);
     printf("    * Date: \t\t\t%s\n", measurement->date);
     printf("    * Latitude:\t\t\t%f\n", measurement->latitude);
@@ -298,7 +300,9 @@ int write_countries(countries_t *source, const char *filename)
 
 void write_measurement(measurement_t *measurement, FILE *fp)
 {
-    fprintf(fp, "%s,%s,%f,%f,%f,%s,%f,%s,%f,%s,%f,%s,%f,%s,%f,%s,%f,%s\n",
+    fprintf(fp, "%s,%s,%s,%s,%f,%f,%f,%s,%f,%s,%f,%s,%f,%s,%f,%s,%f,%s,%f,%s\n",
+                measurement->country_code,
+                measurement->city,
                 measurement->location,
                 measurement->date,
                 measurement->latitude,
@@ -340,7 +344,7 @@ int write_measurements(measurements_t *source, const char *filename)
     {
         // if file does not exist, or if user chooses to overwrite it, write column names first
         if (strcmp(mode, "w") == 0)
-            fprintf(fp, "location,date,latitude,longitude,pm25,unit,pm10,unit,o3,unit,so2,unit,no2,unit,co,unit,bc,unit\n");
+            fprintf(fp, "country_code,city,location,date,latitude,longitude,pm25,pm_25_unit,pm10,pm_10_unit,o3,o3_unit,so2,so2_unit,no2,no2_unit,co,co_unit,bc,bc_unit\n");
 
         for (int i = 0; i < source->size; i++)
         {

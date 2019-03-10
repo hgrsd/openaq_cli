@@ -131,6 +131,8 @@ void TEST_json_extract_measurements(void)
 
     assert(measurements_data.size == 5);
     assert(strcmp(measurements_data.measurements_array[0].location, " 淮河道") == 0);
+    assert(strcmp(measurements_data.measurements_array[0].city, "天津市") == 0);
+    assert(strcmp(measurements_data.measurements_array[0].country_code, "CN") == 0);
     assert(measurements_data.measurements_array[0].pm25 == 70);
     assert(strcmp(measurements_data.measurements_array[0].pm25_unit, "µg/m³") == 0);
     assert(measurements_data.measurements_array[0].co == 1300);
