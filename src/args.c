@@ -2,18 +2,11 @@
 
 #include "args.h"
 
-const char *HELP_STRING = "\nUsage: %s <mode> <options>\n"
-                          "\nModes: \n\n"
-                          "\t"HELP "\t\t\t\t\t\tshow information\n\n"
-                          "\t"LIST_COUNTRIES "\t\t\t\t\tlist all countries in database\n"
-                          "\t"LIST_CITIES_BY_COUNTRY " <country code>\t\t\tlist all cities in <country>\n"
-                          "\t"LIST_LOCATIONS_BY_CITY " <city>\t\t\t\tlists all locations in <city>\n\n"
-                          "\t"PRINT_LATEST_BY_COUNTRY " <country code>\t\t\tprint latest measurements for <country>\n"
-                          "\t"PRINT_LATEST_BY_CITY " <city>\t\t\t\tprint latest measurements for <city>.\n"
-                          "\t"PRINT_LATEST_BY_LOCATION " <location>\t\t\tprint latest measurements for <location>\n\n"
-                          "\t"FIND_HIGHEST_BY_COUNTRY " <country code> <parameter>\tfind location within <country> with highest parameter <parameter>.\n"
-                          "\t"FIND_HIGHEST_BY_CITY " <city> <parameter>\t\t\tfind location within <city> with highest parameter <parameter>.\n"
-                          "\nNote: use quotation marks around multi-word cities or locations.\n\n";
+const char *HELP_STRING = "\n** Modes:\n\n  -g [-y/c/l country code/city/location]:\tget latest measurements\n"
+                            "  -h [PARAMETER] [-y/c country code/city]:\tget highest measurement of PARAMETER\n"
+                            "  -y [COUNTRY CODE]:\t\t\t\tlist cities in COUNTRY, or list all countries if COUNTRY is not specified\n"
+                            "  -c [CITY]:\t\t\t\t\tlist locations in CITY\n\n"
+                            "** Note: use quotation marks around cities or locations comprising multiple words, e.g. \"Dublin City\".\n\n";
 
 void print_info(char *program_name)
 {

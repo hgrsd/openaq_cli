@@ -9,7 +9,7 @@
 #include "core.h"
 #include "string_util.h"
 
-void list_countries(void)
+void print_all_countries(void)
 {   
     response_data_t raw_data;
     countries_t countries_data = {NULL, 0};
@@ -24,7 +24,7 @@ void list_countries(void)
     free(countries_data.countries_array);
 }
 
-void list_cities_by_country(const char *country)
+void print_cities_by_country(const char *country)
 {
     response_data_t raw_data;
     cities_t cities_data = {NULL, 0};
@@ -39,7 +39,7 @@ void list_cities_by_country(const char *country)
     free(cities_data.cities_array);
 }
 
-void list_locations_by_city(const char *city)
+void print_locations_by_city(const char *city)
 {
     response_data_t raw_data;
     locations_t locations_data = {NULL, 0};
@@ -99,7 +99,7 @@ void print_latest_by_location(const char *location)
     free(measurements_data.measurements_array);
 }
 
-void find_highest_by_country(const char *country_code, const char *parameter)
+void print_highest_by_country(const char *country_code, const char *parameter)
 {
     response_data_t raw_data;
     measurements_t measurements_data = {NULL, 0};
@@ -123,7 +123,7 @@ void find_highest_by_country(const char *country_code, const char *parameter)
     free(measurements_data.measurements_array);
 }
 
-void find_highest_by_city(const char *city, const char *parameter)
+void print_highest_by_city(const char *city, const char *parameter)
 {
     response_data_t raw_data;
     measurements_t measurements_data = {NULL, 0};

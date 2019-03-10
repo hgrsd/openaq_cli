@@ -1,102 +1,132 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #include "args.h"
 #include "core.h"
 
 int main(int argc, char *argv[])
-{
-    
-    if (argc < 2)
-    {
-        print_info(argv[0]);
-        return 1;
-    } 
+{   
+    int highest_flag = 0;
+    char *highest_parameter;
+    int get_flag = 0;
+    int country_flag = 0;
+    char *country;
+    int city_flag = 0;
+    char *city;
+    int location_flag = 0;
+    char *location;
+    int write_flag = 0;
+    char *out_file;
+    int c;
 
-    if (!strcmp(argv[1], HELP))
+    extern int opterr;
+    opterr = 0; // disables getopt's error messages
+
+    // read arguments from command line and set flags
+    while ((c = getopt(argc, argv, "gy:c:l:w:h:")) != -1)
     {
-        print_info(argv[0]);
-    }
-    else if (!strcmp(argv[1], LIST_COUNTRIES))
-    {
-        list_countries();
-    }
-    else if (!strcmp(argv[1], LIST_CITIES_BY_COUNTRY))
-    {
-        if (argc < 3)
+        switch(c)
         {
-            puts("No country code specified.");
+            case 'y':
+                country_flag = 1;
+                country = optarg;                
+                break;
+            
+            case 'c':
+                city_flag = 1;
+                city = optarg;
+                break;
+
+            case 'l':
+                location_flag = 1;
+                location = optarg;
+                break;
+            
+            case 'w':
+                write_flag = 1;
+                out_file = optarg;
+                break;
+            
+            case 'h':
+                highest_flag = 1;
+                highest_parameter = optarg;
+                break;
+
+            case 'g':
+                get_flag = 1;
+                break;
+            
+            case '?':
+                if (optopt == 'y')
+                {
+                    country_flag = 1;
+                    country = NULL;
+                }
+                else
+                {
+                    print_info(argv[0]);
+                    return 1;
+                }
+        }
+    }
+
+    // process flags and call relevant function
+    if (get_flag == 1)
+    {
+        if (country_flag == 1 && country != NULL)
+        {
+            print_latest_by_country(country);
+        }
+        else if (city_flag == 1)
+        {
+            print_latest_by_city(city);
+        }
+        else if (location_flag == 1)
+        {
+            print_latest_by_location(location);
+        }
+        else
+        {
             print_info(argv[0]);
             return 1;
         }
-        list_cities_by_country(argv[2]);
     }
-    else if (!strcmp(argv[1], LIST_LOCATIONS_BY_CITY))
+    else if (highest_flag == 1)
     {
-        if (argc < 3)
+        if (country_flag == 1 && country != NULL)
         {
-            puts("No city specified.");
+            print_highest_by_country(country, highest_parameter);
+        }
+        else if (city_flag == 1)
+        {
+            print_highest_by_city(city, highest_parameter);
+        }
+        else
+        {
             print_info(argv[0]);
             return 1;
         }
-        list_locations_by_city(argv[2]);
     }
-    else if (!strcmp(argv[1], PRINT_LATEST_BY_COUNTRY))
+    else if (country_flag == 1)
     {
-        if (argc < 3)
+        if (country == NULL)
+            print_all_countries();
+        else
         {
-            puts("No country code specified.");
-            print_info(argv[0]);
-            return 1;
+            print_cities_by_country(country);
         }
-        print_latest_by_country(argv[2]);
     }
-    else if (!strcmp(argv[1], PRINT_LATEST_BY_CITY))
+    else if (city_flag == 1)
     {
-        if (argc < 3)
-        {
-            puts("No city specified.");
-            print_info(argv[0]);
-            return 1;
-        }
-        print_latest_by_city(argv[2]);
-    }
-    else if (!strcmp(argv[1], PRINT_LATEST_BY_LOCATION))
-    {
-        if (argc < 3)
-        {
-            puts("No location specified.");
-            print_info(argv[0]);
-            return 1;
-        }
-        print_latest_by_location(argv[2]);
-    }
-    else if (!strcmp(argv[1], FIND_HIGHEST_BY_CITY))
-    {
-        if (argc < 4)
-        {
-            puts("No city and/or parameter specified.");
-            print_info(argv[0]);
-            return 1;
-        }
-        find_highest_by_city(argv[2], argv[3]);
-    }
-    else if (!strcmp(argv[1], FIND_HIGHEST_BY_COUNTRY))
-    {
-        if (argc < 4)
-        {
-            puts("No country code and/or parameter specified.");
-            print_info(argv[0]);
-            return 1;
-        }
-        find_highest_by_country(argv[2], argv[3]);
+        print_locations_by_city(city);
     }
     else
     {
         print_info(argv[0]);
         return 1;
     }
-    
+
     return 0;
 }
