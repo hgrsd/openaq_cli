@@ -21,7 +21,8 @@ int main(int argc, char *argv[])
     char *out_file;
     int c;
 
-    extern int opterr;
+    extern char *optarg;
+    extern int opterr, optopt;
     opterr = 0; // disables getopt's error messages
 
     // read arguments from command line and set flags
