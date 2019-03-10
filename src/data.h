@@ -133,17 +133,6 @@ void init_locations(locations_t *target, int nmemb);
 // Initialises an array of countries. Must be called before using the structure.
 void init_countries(countries_t *target, int nmemb);
 
-// Prints a list of countries and their info
-void print_countries(countries_t *source);
-// Prints a list of cities and their info
-void print_cities(cities_t *source);
-// Prints a list of locations and their info
-void print_locations(locations_t *source);
-// Prints a single measurement 
-void print_measurement(measurement_t *measurement);
-// Prints all measurements contained in the structure passed in.
-void print_measurements(measurements_t *source);
-
 // returns parameter_t enum based on string input
 parameter_t string_to_param(const char *string);
 
