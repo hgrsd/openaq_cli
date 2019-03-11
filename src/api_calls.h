@@ -4,7 +4,7 @@
 #define URL_CITIES "https://api.openaq.org/v1/cities?limit=10000&country=%s"
 #define URL_COUNTRIES "https://api.openaq.org/v1/countries"
 #define URL_LOCATIONS "https://api.openaq.org/v1/locations?limit=10000&city=%s"
-#define URL_LATEST_BY_CITY "https://api.openaq.org/v1/latest?&limit=10000city=%s"
+#define URL_LATEST_BY_CITY "https://api.openaq.org/v1/latest?&limit=10000&city=%s"
 #define URL_LATEST_BY_COUNTRY "https://api.openaq.org/v1/latest?limit=10000&country=%s"
 #define URL_LATEST_BY_LOCATION "https://api.openaq.org/v1/latest?location=%s"
 
