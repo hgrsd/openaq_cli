@@ -4,7 +4,7 @@
 #include "io.h"
 
 // returns mode for use with fopen() - "c" if user cancels / enters invalid response.
-static char *get_mode(const char *filename)
+static const char *get_mode(const char *filename)
 {
     char response;
     FILE *fp;
@@ -220,7 +220,7 @@ void print_measurements(measurements_t *source)
 int write_countries(countries_t *source, const char *filename)
 {
     int lines = 0;
-    char *mode = get_mode(filename);
+    const char *mode = get_mode(filename);
 
     FILE *fp;
     
@@ -255,7 +255,7 @@ int write_countries(countries_t *source, const char *filename)
 int write_cities(cities_t *source, const char *filename)
 {
     int lines = 0;
-    char *mode = get_mode(filename);
+    const char *mode = get_mode(filename);
     
     FILE *fp;
         
@@ -290,7 +290,7 @@ int write_cities(cities_t *source, const char *filename)
 int write_locations(locations_t *source, const char *filename)
 {
     int lines = 0;
-    char *mode = get_mode(filename);
+    const char *mode = get_mode(filename);
 
     FILE *fp;    
     
@@ -325,7 +325,7 @@ int write_locations(locations_t *source, const char *filename)
 int write_measurements(measurements_t *source, const char *filename)
 {
     int lines = 0;
-    char *mode = get_mode(filename);
+    const char *mode = get_mode(filename);
     FILE *fp;
     
     if(source->size == 0)
