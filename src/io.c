@@ -3,13 +3,8 @@
 
 #include "io.h"
 
-static inline void print_value(const char *measurement, float value, const char *unit)
-{
-    printf("%s: \t\t\t%.3f %s\n", measurement, value, unit);
-}
-
 // returns mode for use with fopen() - "c" if user cancels / enters invalid response.
-char *get_mode(const char *filename)
+static char *get_mode(const char *filename)
 {
     char response;
     FILE *fp;
@@ -40,7 +35,22 @@ char *get_mode(const char *filename)
     return "w";   
 }
 
-void print_location(location_t *source)
+static void print_country(country_t *source)
+{
+    printf("    * Name:\t\t%s\n", source->name);
+    printf("    * Code:\t\t%s\n", source->country_code);
+    printf("    * # of cities:\t%d\n", source->n_cities);
+    printf("    * # of locations:\t%d\n\n", source->n_locations);
+}
+
+static void print_city(city_t *source)
+{
+    printf("    * Name:\t\t%s\n", source->name);
+    printf("    * Country code:\t%s\n", source->country_code);
+    printf("    * # of locations:\t%d\n\n", source->n_locations);
+}
+
+static void print_location(location_t *source)
 {
     printf("    * Name:\t\t\t%s\n", source->name);
     printf("    * City:\t\t\t%s\n", source->city);
@@ -65,58 +75,12 @@ void print_location(location_t *source)
     printf("\n\n"); 
 }
 
-void print_locations(locations_t *source)
+static inline void print_value(const char *measurement, float value, const char *unit)
 {
-    if(source->size == 0)
-        puts("No locations found.");
-
-    for (int i = 0; i < source->size; i++)
-    {
-        printf("[+] Record #%d\n\n", i + 1);
-        print_location(source->locations_array + i);
-    }
+    printf("%s: \t\t\t%.3f %s\n", measurement, value, unit);
 }
 
-void print_city(city_t *source)
-{
-    printf("    * Name:\t\t%s\n", source->name);
-    printf("    * Country code:\t%s\n", source->country_code);
-    printf("    * # of locations:\t%d\n\n", source->n_locations);
-}
-
-void print_cities(cities_t *source)
-{
-    if(source->size == 0)
-        puts("No cities found.");
-
-    for (int i = 0; i < source->size; i++)
-    {
-        printf("[+] Record #%d\n\n", i + 1);
-        print_city(source->cities_array + i);
-    }
-}
-
-void print_country(country_t *source)
-{
-    printf("    * Name:\t\t%s\n", source->name);
-    printf("    * Code:\t\t%s\n", source->country_code);
-    printf("    * # of cities:\t%d\n", source->n_cities);
-    printf("    * # of locations:\t%d\n\n", source->n_locations);
-}
-
-void print_countries(countries_t *source)
-{
-    if(source->size == 0)
-        puts("No countries found.");
-
-    for (int i = 0; i < source->size; i++)
-    {
-        printf("[+] Record #%d\n\n", i + 1);
-        print_country(source->countries_array + i);
-    }
-}
-
-void print_measurement(measurement_t *measurement)
+static void print_measurement(measurement_t *measurement)
 {
     printf("    * Country: \t\t\t%s\n", measurement->country_code);
     printf("    * City: \t\t\t%s\n", measurement->city);
@@ -143,22 +107,24 @@ void print_measurement(measurement_t *measurement)
     printf("\n");
 }
 
-void print_measurements(measurements_t *source)
+static void write_city(city_t *source, FILE *fp)
 {
-    if(source->size == 0)
-    {
-        printf("No measurements found.\n");
-        return;
-    }
-
-    for (int i = 0; i < source->size; i++)
-    {
-        printf("[+] Record #%d\n\n", i + 1);
-        print_measurement(source->measurements_array + i);
-    }
+    fprintf(fp, "%s,%s,%d\n",
+                source->country_code,
+                source->name,
+                source->n_locations);   
 }
 
-void write_location(location_t *source, FILE *fp)
+static void write_country(country_t *source, FILE *fp)
+{
+    fprintf(fp, "%s,%s,%d,%d\n",
+                source->name,
+                source->country_code,
+                source->n_cities,
+                source->n_locations);   
+}
+
+static void write_location(location_t *source, FILE *fp)
 {
     fprintf(fp, "%s,%s,%s,%f,%f,%d,%d,%d,%d,%d,%d,%d\n",
                 source->country_code,
@@ -175,91 +141,80 @@ void write_location(location_t *source, FILE *fp)
                 source->has_bc);   
 }
 
-int write_locations(locations_t *source, const char *filename)
+static void write_measurement(measurement_t *measurement, FILE *fp)
 {
-    int lines = 0;
-    char *mode = get_mode(filename);
+    fprintf(fp, "%s,%s,%s,%s,%f,%f,%f,%s,%f,%s,%f,%s,%f,%s,%f,%s,%f,%s,%f,%s\n",
+                measurement->country_code,
+                measurement->city,
+                measurement->location,
+                measurement->date,
+                measurement->latitude,
+                measurement->longitude,
+                measurement->pm25,
+                measurement->pm25_unit,
+                measurement->pm10,
+                measurement->pm10_unit,
+                measurement->o3,
+                measurement->o3_unit,
+                measurement->so2,
+                measurement->so2_unit,
+                measurement->no2,
+                measurement->no2_unit,
+                measurement->co,
+                measurement->co_unit,
+                measurement->bc,
+                measurement->bc_unit);
+}
 
-    FILE *fp;    
-    
+void print_countries(countries_t *source)
+{
+    if(source->size == 0)
+        puts("No countries found.");
+
+    for (int i = 0; i < source->size; i++)
+    {
+        printf("[+] Record #%d\n\n", i + 1);
+        print_country(source->countries_array + i);
+    }
+}
+
+void print_cities(cities_t *source)
+{
+    if(source->size == 0)
+        puts("No cities found.");
+
+    for (int i = 0; i < source->size; i++)
+    {
+        printf("[+] Record #%d\n\n", i + 1);
+        print_city(source->cities_array + i);
+    }
+}
+
+void print_locations(locations_t *source)
+{
+    if(source->size == 0)
+        puts("No locations found.");
+
+    for (int i = 0; i < source->size; i++)
+    {
+        printf("[+] Record #%d\n\n", i + 1);
+        print_location(source->locations_array + i);
+    }
+}
+
+void print_measurements(measurements_t *source)
+{
     if(source->size == 0)
     {
-        printf("No locations found.\n");
-        return 0;
+        printf("No measurements found.\n");
+        return;
     }
-    
-    if ((fp = fopen(filename, mode)) == NULL)
+
+    for (int i = 0; i < source->size; i++)
     {
-        printf("Error opening file %s.\n", filename);
-        return 0;
+        printf("[+] Record #%d\n\n", i + 1);
+        print_measurement(source->measurements_array + i);
     }
-    else
-    {
-        // if file does not exist, or if user chooses to overwrite it, write column names first
-        if (strcmp(mode, "w") == 0)
-            fprintf(fp, "country_code,city,location,latitude,longitude,pm25,pm10,o3,so2,no2,co,bc\n");
-
-        for (int i = 0; i < source->size; i++)
-        {
-            write_location(source->locations_array + i, fp);
-            lines = i + 1;
-        }
-        fclose(fp);
-    }
-    
-    return lines;
-}
-
-void write_city(city_t *source, FILE *fp)
-{
-    fprintf(fp, "%s,%s,%d\n",
-                source->country_code,
-                source->name,
-                source->n_locations);   
-}
-
-int write_cities(cities_t *source, const char *filename)
-{
-    int lines = 0;
-    char *mode = get_mode(filename);
-    
-    FILE *fp;
-        
-    if(source->size == 0)
-    {
-        printf("No cities found.\n");
-        return 0;
-    }
-    
-    if ((fp = fopen(filename, mode)) == NULL)
-    {
-        printf("Error opening file %s.\n", filename);
-        return 0;
-    }
-    else
-    {
-        // if file does not exist, or if user chooses to overwrite it, write column names first
-        if (strcmp(mode, "w") == 0)
-            fprintf(fp, "country_code,city,n_locations\n");
-
-        for (int i = 0; i < source->size; i++)
-        {
-            write_city(source->cities_array + i, fp);
-            lines = i + 1;
-        }
-        fclose(fp);
-    }
-
-    return lines;
-}
-
-void write_country(country_t *source, FILE *fp)
-{
-    fprintf(fp, "%s,%s,%d,%d\n",
-                source->name,
-                source->country_code,
-                source->n_cities,
-                source->n_locations);   
 }
 
 int write_countries(countries_t *source, const char *filename)
@@ -297,30 +252,74 @@ int write_countries(countries_t *source, const char *filename)
     return lines;
 }
 
-
-void write_measurement(measurement_t *measurement, FILE *fp)
+int write_cities(cities_t *source, const char *filename)
 {
-    fprintf(fp, "%s,%s,%s,%s,%f,%f,%f,%s,%f,%s,%f,%s,%f,%s,%f,%s,%f,%s,%f,%s\n",
-                measurement->country_code,
-                measurement->city,
-                measurement->location,
-                measurement->date,
-                measurement->latitude,
-                measurement->longitude,
-                measurement->pm25,
-                measurement->pm25_unit,
-                measurement->pm10,
-                measurement->pm10_unit,
-                measurement->o3,
-                measurement->o3_unit,
-                measurement->so2,
-                measurement->so2_unit,
-                measurement->no2,
-                measurement->no2_unit,
-                measurement->co,
-                measurement->co_unit,
-                measurement->bc,
-                measurement->bc_unit);
+    int lines = 0;
+    char *mode = get_mode(filename);
+    
+    FILE *fp;
+        
+    if(source->size == 0)
+    {
+        printf("No cities found.\n");
+        return 0;
+    }
+    
+    if ((fp = fopen(filename, mode)) == NULL)
+    {
+        printf("Error opening file %s.\n", filename);
+        return 0;
+    }
+    else
+    {
+        // if file does not exist, or if user chooses to overwrite it, write column names first
+        if (strcmp(mode, "w") == 0)
+            fprintf(fp, "country_code,city,n_locations\n");
+
+        for (int i = 0; i < source->size; i++)
+        {
+            write_city(source->cities_array + i, fp);
+            lines = i + 1;
+        }
+        fclose(fp);
+    }
+
+    return lines;
+}
+
+int write_locations(locations_t *source, const char *filename)
+{
+    int lines = 0;
+    char *mode = get_mode(filename);
+
+    FILE *fp;    
+    
+    if(source->size == 0)
+    {
+        printf("No locations found.\n");
+        return 0;
+    }
+    
+    if ((fp = fopen(filename, mode)) == NULL)
+    {
+        printf("Error opening file %s.\n", filename);
+        return 0;
+    }
+    else
+    {
+        // if file does not exist, or if user chooses to overwrite it, write column names first
+        if (strcmp(mode, "w") == 0)
+            fprintf(fp, "country_code,city,location,latitude,longitude,pm25,pm10,o3,so2,no2,co,bc\n");
+
+        for (int i = 0; i < source->size; i++)
+        {
+            write_location(source->locations_array + i, fp);
+            lines = i + 1;
+        }
+        fclose(fp);
+    }
+    
+    return lines;
 }
 
 int write_measurements(measurements_t *source, const char *filename)
