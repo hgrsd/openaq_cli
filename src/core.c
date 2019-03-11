@@ -10,14 +10,14 @@
 #include "string_util.h"
 
 void print_all_countries(void)
-{   
+{
     response_data_t raw_data;
     countries_t countries_data = {NULL, 0};
 
     init_data(&raw_data);
     api_fetch_countries(&raw_data);
     json_extract_countries(raw_data.data, &countries_data);
-    
+
     print_countries(&countries_data);
 
     clear_data(&raw_data);
@@ -50,7 +50,7 @@ void print_locations_by_city(const char *city)
 
     print_locations(&locations_data);
 
-    clear_data(&raw_data);   
+    clear_data(&raw_data);
     free(locations_data.locations_array);
 }
 
@@ -92,7 +92,7 @@ void print_latest_by_location(const char *location)
     init_data(&raw_data);
     api_fetch_latest_by_location(location, &raw_data);
     json_extract_measurements(raw_data.data, &measurements_data);
-    
+
     print_measurements(&measurements_data);
 
     clear_data(&raw_data);
