@@ -175,7 +175,7 @@ void highest_by_country(const char *country_code, const char *parameter, print_m
         {
             lines_written = write_measurements(&highest, filename);
             if (lines_written)
-                printf("    * written %d     * written.\n", lines_written);
+                printf("    * written %d lines to file\n", lines_written);
         }
         else
         {
