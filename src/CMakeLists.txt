@@ -5,7 +5,8 @@ add_library (openaq_lib
 			json.c
 			api_calls.c
 			args.c
-			io.c)
+			io.c
+			date_util.c)
 
 add_executable (openaq_cli openaq_cli.c)
 

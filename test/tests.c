@@ -18,14 +18,14 @@ void TEST_data_find_highest(void)
     json_extract_measurements(JSON_LATEST_TEST, &measurements_data);
 
     highest = find_highest(&measurements_data, string_to_param("PM25"));
-    assert(highest->pm25 == 70);
+    assert(highest->substances[PARAM_PM25].value == 70);
     
     highest = find_highest(&measurements_data, string_to_param("BC"));
     assert(highest == NULL);
 
     json_extract_measurements(JSON_LATEST_TEST_EMPTY, &measurements_data);
     highest = find_highest(&measurements_data, string_to_param("CO"));
-    assert(highest->co == 2);
+    assert(highest->substances[PARAM_CO].value == 2);
 
     json_extract_measurements(JSON_LATEST_TEST_MALFORMED, &measurements_data);
     highest = find_highest(&measurements_data, string_to_param("PM25"));
@@ -133,23 +133,23 @@ void TEST_json_extract_measurements(void)
     assert(strcmp(measurements_data.measurements_array[0].location, " 淮河道") == 0);
     assert(strcmp(measurements_data.measurements_array[0].city, "天津市") == 0);
     assert(strcmp(measurements_data.measurements_array[0].country_code, "CN") == 0);
-    assert(measurements_data.measurements_array[0].pm25 == 70);
-    assert(strcmp(measurements_data.measurements_array[0].pm25_unit, "µg/m³") == 0);
-    assert(measurements_data.measurements_array[0].co == 1300);
-    assert(strcmp(measurements_data.measurements_array[0].co_unit, "µg/m³") == 0);
-    assert(measurements_data.measurements_array[0].bc == -1);
+    assert(measurements_data.measurements_array[0].substances[PARAM_PM25].value == 70);
+    assert(strcmp(measurements_data.measurements_array[0].substances[PARAM_PM25].unit, "µg/m³") == 0);
+    assert(measurements_data.measurements_array[0].substances[PARAM_CO].value == 1300);
+    assert(strcmp(measurements_data.measurements_array[0].substances[PARAM_CO].unit, "µg/m³") == 0);
+    assert(measurements_data.measurements_array[0].substances[PARAM_BC].value == -1);
     assert(measurements_data.measurements_array[1].latitude == 0);
     assert(measurements_data.measurements_array[1].longitude == 0);
     assert(strcmp(measurements_data.measurements_array[2].location, "1-r khoroolol") == 0);
-    assert(measurements_data.measurements_array[2].pm10 == 103);
-    assert(measurements_data.measurements_array[2].co == -1);
-    assert(strcmp(measurements_data.measurements_array[2].pm10_unit, "µg/m³") == 0);
+    assert(measurements_data.measurements_array[2].substances[PARAM_PM10].value == 103);
+    assert(measurements_data.measurements_array[2].substances[PARAM_CO].value == -1);
+    assert(strcmp(measurements_data.measurements_array[2].substances[PARAM_PM10].unit, "µg/m³") == 0);
     assert(measurements_data.measurements_array[2].latitude == 47.91798);
     assert(measurements_data.measurements_array[2].longitude == 106.84806);
     assert(strcmp(measurements_data.measurements_array[4].location, "16th and Whitmore") == 0);
-    assert(measurements_data.measurements_array[4].o3 == 0.016);
-    assert(strcmp(measurements_data.measurements_array[4].o3_unit, "ppm") == 0);
-    assert(measurements_data.measurements_array[4].pm25 == -1);
+    assert(measurements_data.measurements_array[4].substances[PARAM_O3].value == 0.016);
+    assert(strcmp(measurements_data.measurements_array[4].substances[PARAM_O3].unit, "ppm") == 0);
+    assert(measurements_data.measurements_array[4].substances[PARAM_PM25].value == -1);
 
 
     // malformed
@@ -158,13 +158,13 @@ void TEST_json_extract_measurements(void)
 
     // empty parameters
     json_extract_measurements(JSON_LATEST_TEST_EMPTY, &measurements_data);
-    assert(measurements_data.measurements_array[0].pm25 == -1);
-    assert(measurements_data.measurements_array[0].pm10 == -1);
-    assert(measurements_data.measurements_array[0].no2 == -1);
-    assert(measurements_data.measurements_array[0].so2 == -1);
-    assert(measurements_data.measurements_array[0].bc == -1);
-    assert(measurements_data.measurements_array[0].o3 == -1);
-    assert(measurements_data.measurements_array[0].co == -1);
+    assert(measurements_data.measurements_array[0].substances[PARAM_PM25].value == -1);
+    assert(measurements_data.measurements_array[0].substances[PARAM_PM10].value == -1);
+    assert(measurements_data.measurements_array[0].substances[PARAM_NO2].value == -1);
+    assert(measurements_data.measurements_array[0].substances[PARAM_SO2].value == -1);
+    assert(measurements_data.measurements_array[0].substances[PARAM_BC].value == -1);
+    assert(measurements_data.measurements_array[0].substances[PARAM_O3].value == -1);
+    assert(measurements_data.measurements_array[0].substances[PARAM_CO].value == -1);
 
 
     printf("    [PASS]\n\n");
@@ -208,21 +208,20 @@ void TEST_data_init_measurements(void)
     for (int i = 0; i < 5; i++)
     {
         assert(strcmp(measurements_data.measurements_array[i].location, "\0") == 0);
-        assert(strcmp(measurements_data.measurements_array[i].date, "\0") == 0);
-        assert(strcmp(measurements_data.measurements_array[i].bc_unit, "\0") == 0);
-        assert(strcmp(measurements_data.measurements_array[i].co_unit, "\0") == 0);
-        assert(strcmp(measurements_data.measurements_array[i].no2_unit, "\0") == 0);
-        assert(strcmp(measurements_data.measurements_array[i].o3_unit, "\0") == 0);
-        assert(strcmp(measurements_data.measurements_array[i].pm10_unit, "\0") == 0);
-        assert(strcmp(measurements_data.measurements_array[i].pm25_unit, "\0") == 0);
-        assert(strcmp(measurements_data.measurements_array[i].so2_unit, "\0") == 0);
-        assert(measurements_data.measurements_array[i].bc == -1);
-        assert(measurements_data.measurements_array[i].co == -1);
-        assert(measurements_data.measurements_array[i].no2 == -1);
-        assert(measurements_data.measurements_array[i].o3 == -1);
-        assert(measurements_data.measurements_array[i].pm10 == -1);
-        assert(measurements_data.measurements_array[i].pm25 == -1);
-        assert(measurements_data.measurements_array[i].so2 == -1);
+        assert(strcmp(measurements_data.measurements_array[i].substances[PARAM_BC].unit, "\0") == 0);
+        assert(strcmp(measurements_data.measurements_array[i].substances[PARAM_CO].unit, "\0") == 0);
+        assert(strcmp(measurements_data.measurements_array[i].substances[PARAM_NO2].unit, "\0") == 0);
+        assert(strcmp(measurements_data.measurements_array[i].substances[PARAM_O3].unit, "\0") == 0);
+        assert(strcmp(measurements_data.measurements_array[i].substances[PARAM_PM10].unit, "\0") == 0);
+        assert(strcmp(measurements_data.measurements_array[i].substances[PARAM_PM25].unit, "\0") == 0);
+        assert(strcmp(measurements_data.measurements_array[i].substances[PARAM_SO2].unit, "\0") == 0);
+        assert(measurements_data.measurements_array[i].substances[PARAM_BC].value == -1);
+        assert(measurements_data.measurements_array[i].substances[PARAM_CO].value == -1);
+        assert(measurements_data.measurements_array[i].substances[PARAM_NO2].value == -1);
+        assert(measurements_data.measurements_array[i].substances[PARAM_O3].value == -1);
+        assert(measurements_data.measurements_array[i].substances[PARAM_PM10].value == -1);
+        assert(measurements_data.measurements_array[i].substances[PARAM_PM25].value == -1);
+        assert(measurements_data.measurements_array[i].substances[PARAM_SO2].value == -1);
     }
 
     printf("    [PASS]\n\n");

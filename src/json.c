@@ -1,7 +1,8 @@
 #include <jansson.h>
 #include <string.h>
-#include "string_util.h"
 
+#include "string_util.h"
+#include "date_util.h"
 #include "json.h"
 
 static json_t *get_results(const char *raw_data, json_t *root)
@@ -84,41 +85,47 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
 
             parameter_string = json_string_value(parameter);   
 
-            strcpy_s(target->measurements_array[i].date, json_string_value(date), DATE_MAX);
             if (strcmp(parameter_string, "pm25") == 0)
             {
-                target->measurements_array[i].pm25 = val;
-                strcpy_s(target->measurements_array[i].pm25_unit, json_string_value(unit), UNIT_MAX);
+                target->measurements_array[i].substances[PARAM_PM25].value = val;
+                target->measurements_array[i].substances[PARAM_PM25].timestamp = string_to_timestamp(json_string_value(date));
+                strcpy_s(target->measurements_array[i].substances[PARAM_PM25].unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "pm10") == 0)
             {
-                target->measurements_array[i].pm10 = val;
-                strcpy_s(target->measurements_array[i].pm10_unit, json_string_value(unit), UNIT_MAX);
+                target->measurements_array[i].substances[PARAM_PM10].value = val;
+                target->measurements_array[i].substances[PARAM_PM10].timestamp = string_to_timestamp(json_string_value(date));
+                strcpy_s(target->measurements_array[i].substances[PARAM_PM10].unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "o3") == 0)
             {
-                target->measurements_array[i].o3 = val;
-                strcpy_s(target->measurements_array[i].o3_unit, json_string_value(unit), UNIT_MAX);
+                target->measurements_array[i].substances[PARAM_O3].value = val;
+                target->measurements_array[i].substances[PARAM_O3].timestamp = string_to_timestamp(json_string_value(date));
+                strcpy_s(target->measurements_array[i].substances[PARAM_O3].unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "so2") == 0)
             {
-                target->measurements_array[i].so2 = val;
-                strcpy_s(target->measurements_array[i].so2_unit, json_string_value(unit), UNIT_MAX);
+                target->measurements_array[i].substances[PARAM_SO2].value = val;
+                target->measurements_array[i].substances[PARAM_SO2].timestamp = string_to_timestamp(json_string_value(date));
+                strcpy_s(target->measurements_array[i].substances[PARAM_SO2].unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "no2") == 0)
             {
-                target->measurements_array[i].no2 = val;
-                strcpy_s(target->measurements_array[i].no2_unit, json_string_value(unit), UNIT_MAX);
+                target->measurements_array[i].substances[PARAM_NO2].value = val;
+                target->measurements_array[i].substances[PARAM_NO2].timestamp = string_to_timestamp(json_string_value(date));
+                strcpy_s(target->measurements_array[i].substances[PARAM_NO2].unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "co") == 0)
             {
-                target->measurements_array[i].co = val;
-                strcpy_s(target->measurements_array[i].co_unit, json_string_value(unit), UNIT_MAX);
+                target->measurements_array[i].substances[PARAM_CO].value = val;
+                target->measurements_array[i].substances[PARAM_CO].timestamp = string_to_timestamp(json_string_value(date));
+                strcpy_s(target->measurements_array[i].substances[PARAM_CO].unit, json_string_value(unit), UNIT_MAX);
             }
             else if (strcmp(parameter_string, "bc") == 0)
             {
-                target->measurements_array[i].bc = val;
-                strcpy_s(target->measurements_array[i].bc_unit, json_string_value(unit), UNIT_MAX);
+                target->measurements_array[i].substances[PARAM_BC].value = val;
+                target->measurements_array[i].substances[PARAM_BC].timestamp = string_to_timestamp(json_string_value(date));
+                strcpy_s(target->measurements_array[i].substances[PARAM_BC].unit, json_string_value(unit), UNIT_MAX);
             }
             else
                 printf("Unknown parameter: %s. Ignoring.\n", parameter_string);
