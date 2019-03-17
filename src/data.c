@@ -4,13 +4,13 @@
 #include "data.h"
 
 size_t offsets[] = {
-    offsetof(measurement_t, pm25),
-    offsetof(measurement_t, pm10),
-    offsetof(measurement_t, o3),
-    offsetof(measurement_t, so2),
-    offsetof(measurement_t, no2),
-    offsetof(measurement_t, co),
-    offsetof(measurement_t, bc),
+    offsetof(measurement_t, substances[PARAM_PM25].value),
+    offsetof(measurement_t, substances[PARAM_PM10].value),
+    offsetof(measurement_t, substances[PARAM_O3].value),
+    offsetof(measurement_t, substances[PARAM_SO2].value),
+    offsetof(measurement_t, substances[PARAM_NO2].value),
+    offsetof(measurement_t, substances[PARAM_CO].value),
+    offsetof(measurement_t, substances[PARAM_BC].value),
     0
 };
 
@@ -53,23 +53,16 @@ void init_measurements(measurements_t *target, int nmemb)
     for (int i = 0; i < nmemb; i++)
     {
         strcpy(target->measurements_array[i].location, "\0");
-        strcpy(target->measurements_array[i].date, "\0");
+        strcpy(target->measurements_array[i].city, "\0");
+        strcpy(target->measurements_array[i].country_code, "\0");
         target->measurements_array[i].latitude = 0;
         target->measurements_array[i].longitude = 0;
-        target->measurements_array[i].bc = -1;
-        strcpy(target->measurements_array[i].bc_unit, "\0");
-        target->measurements_array[i].co = -1;
-        strcpy(target->measurements_array[i].co_unit, "\0");
-        target->measurements_array[i].no2 = -1;
-        strcpy(target->measurements_array[i].no2_unit, "\0");
-        target->measurements_array[i].o3 = -1;
-        strcpy(target->measurements_array[i].o3_unit, "\0");
-        target->measurements_array[i].pm10 = -1;
-        strcpy(target->measurements_array[i].pm10_unit, "\0");
-        target->measurements_array[i].pm25 = -1;
-        strcpy(target->measurements_array[i].pm25_unit, "\0");
-        target->measurements_array[i].so2 = -1;
-        strcpy(target->measurements_array[i].so2_unit, "\0");
+        for (int j = 0; j < N_SUBSTANCES; j++)
+        {
+            target->measurements_array[i].substances[j].timestamp = -1;
+            target->measurements_array[i].substances[j].value = -1;
+            strcpy(target->measurements_array[i].substances[j].unit, "\0");
+        }
     }
 }
 

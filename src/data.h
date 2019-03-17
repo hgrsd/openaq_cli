@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stddef.h>
+#include <time.h>
 
 #define LOCATION_MAX 128
 #define CITY_MAX 128
@@ -10,6 +11,7 @@
 #define COUNTRY_CODE_MAX 3
 #define DATE_MAX 30
 #define UNIT_MAX 12
+#define N_SUBSTANCES 7
 
 // all possible parameters that may be returned
 typedef enum parameter
@@ -89,29 +91,22 @@ typedef struct _locations_t
     int size;
 } locations_t;
 
+typedef struct _substance_t
+{
+    char unit[UNIT_MAX];
+    double value;
+    time_t timestamp;
+} substance_t;
+
 // holds JSON-decoded measurements for a single location
 typedef struct _measurement_t
-{
+{   
+    substance_t substances[N_SUBSTANCES];
     char country_code[COUNTRY_CODE_MAX];
     char city[CITY_MAX];
     char location[LOCATION_MAX];
-    char date[DATE_MAX];
-    char pm25_unit[UNIT_MAX];
-    char pm10_unit[UNIT_MAX];
-    char o3_unit[UNIT_MAX];
-    char so2_unit[UNIT_MAX];
-    char no2_unit[UNIT_MAX];
-    char co_unit[UNIT_MAX];
-    char bc_unit[UNIT_MAX];
     double latitude;
     double longitude;
-    double pm25;
-    double pm10;
-    double o3;
-    double so2;
-    double no2;
-    double co;
-    double bc;
 } measurement_t;
 
 // holds a series of JSON-decoded measurements
