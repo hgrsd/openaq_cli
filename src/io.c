@@ -273,7 +273,7 @@ int write_countries(countries_t *source, const char *filename)
         for (int i = 0; i < source->size; i++)
         {
             write_country(source->countries_array + i, fp);
-            lines = i + 1;
+            lines = lines + 1;
         }
         fclose(fp);
     }
@@ -308,7 +308,7 @@ int write_cities(cities_t *source, const char *filename)
         for (int i = 0; i < source->size; i++)
         {
             write_city(source->cities_array + i, fp);
-            lines = i + 1;
+            lines = lines + 1;
         }
         fclose(fp);
     }
@@ -343,7 +343,7 @@ int write_locations(locations_t *source, const char *filename)
         for (int i = 0; i < source->size; i++)
         {
             write_location(source->locations_array + i, fp);
-            lines = i + 1;
+            lines = lines + 1;
         }
         fclose(fp);
     }
@@ -376,8 +376,11 @@ int write_measurements(measurements_t *source, const char *filename)
 
         for (int i = 0; i < source->size; i++)
         {
-            write_measurement(source->measurements_array + i, fp);
-            lines = i + 1;
+            if (strcmp(source->measurements_array[i].location, "\0") != 0)
+            {
+                write_measurement(source->measurements_array + i, fp);
+                lines = lines + 1;
+            }
         }
         fclose(fp);
     }

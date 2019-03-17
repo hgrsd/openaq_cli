@@ -84,7 +84,7 @@ void locations_by_city(const char *city, print_mode_t mode, const char *filename
     free(locations_data.locations_array);
 }
 
-void latest_by_country(const char *country, print_mode_t mode, const char *filename)
+void latest(request_type_t type, const char *argument, print_mode_t mode, const char *filename)
 {
     int lines_written;
 
@@ -92,7 +92,63 @@ void latest_by_country(const char *country, print_mode_t mode, const char *filen
     measurements_t measurements_data = {NULL, 0};
 
     init_data(&raw_data);
-    api_fetch_latest_by_country(country, &raw_data);
+    api_fetch_latest(type, argument, &raw_data);
+    json_extract_latest(raw_data.data, &measurements_data);
+
+    if (mode == TO_CSV)
+    {
+        lines_written = write_measurements(&measurements_data, filename);
+        if (lines_written)
+                printf("    * written %d line(s) to file.\n", lines_written);
+    }
+    else
+        print_measurements(&measurements_data);
+
+    clear_data(&raw_data);
+    free(measurements_data.measurements_array);
+}
+
+void date_range(request_type_t type, const char *argument, const char *date_from, const char *date_to, print_mode_t mode, const char *filename)
+{
+    int lines_written;
+    int year, month, day;
+    char from_date_translated[DATE_MAX], to_date_translated[DATE_MAX];
+    
+    response_data_t raw_data;
+    measurements_t measurements_data = {NULL, 0};
+
+    init_data(&raw_data);
+
+    if (date_from && date_to)
+    {
+        // translate to US date style
+        sscanf(date_from, "%2d/%2d/%4d", &day, &month, &year);
+        snprintf(from_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
+        sscanf(date_to, "%2d/%2d/%4d", &day, &month, &year);
+        snprintf(to_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
+        api_fetch_range(type, argument, from_date_translated, to_date_translated, &raw_data);
+    }
+    else if (date_from)
+    {
+        // translate to US date style
+        sscanf(date_from, "%2d/%2d/%4d", &day, &month, &year);
+        snprintf(from_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
+        api_fetch_range(type, argument, from_date_translated, NULL, &raw_data);
+    }
+    else if (date_to)
+    {
+        // translate to US date style
+        sscanf(date_to, "%2d/%2d/%4d", &day, &month, &year);
+        snprintf(to_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
+        api_fetch_range(type, argument, NULL, to_date_translated, &raw_data);
+    }
+    else
+    {
+        // invalid input
+        free(measurements_data.measurements_array);
+        return;
+    }
+
     json_extract_measurements(raw_data.data, &measurements_data);
 
     if (mode == TO_CSV)
@@ -108,64 +164,48 @@ void latest_by_country(const char *country, print_mode_t mode, const char *filen
     free(measurements_data.measurements_array);
 }
 
-void latest_by_city(const char *city, print_mode_t mode, const char *filename)
+void highest_range(request_type_t type, const char *argument, const char *parameter, const char* date_from, const char* date_to, print_mode_t mode, const char *filename)
 {
     int lines_written;
-
-    response_data_t raw_data;
-    measurements_t measurements_data = {NULL, 0};
-
-    init_data(&raw_data);
-    api_fetch_latest_by_city(city, &raw_data);
-    json_extract_measurements(raw_data.data, &measurements_data);
-
-    if (mode == TO_CSV)
-    {
-        lines_written = write_measurements(&measurements_data, filename);
-        if (lines_written)
-                printf("    * written %d line(s) to file.\n", lines_written);
-    }
-    else
-        print_measurements(&measurements_data);
-
-    clear_data(&raw_data);
-    free(measurements_data.measurements_array);
-}
-
-void latest_by_location(const char *location, print_mode_t mode, const char *filename)
-{
-    int lines_written;
-
-    response_data_t raw_data;
-    measurements_t measurements_data = {NULL, 0};
-
-    init_data(&raw_data);
-    api_fetch_latest_by_location(location, &raw_data);
-    json_extract_measurements(raw_data.data, &measurements_data);
-
-    if (mode == TO_CSV)
-    {
-        lines_written = write_measurements(&measurements_data, filename);
-        if (lines_written)
-                printf("    * written %d line(s) to file.\n", lines_written);
-    }
-    else
-        print_measurements(&measurements_data);
-
-    clear_data(&raw_data);
-    free(measurements_data.measurements_array);
-}
-
-void highest_by_country(const char *country_code, const char *parameter, print_mode_t mode, const char *filename)
-{
-    int lines_written;
+    int year, month, day;
+    char from_date_translated[DATE_MAX], to_date_translated[DATE_MAX];
 
     response_data_t raw_data;
     measurements_t measurements_data = {NULL, 0};
     measurements_t highest = {NULL, 0};
-
+  
     init_data(&raw_data);
-    api_fetch_latest_by_country(country_code, &raw_data);
+
+    if (date_from && date_to)
+    {
+        // translate to US date style
+        sscanf(date_from, "%2d/%2d/%4d", &day, &month, &year);
+        snprintf(from_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
+        sscanf(date_to, "%2d/%2d/%4d", &day, &month, &year);
+        snprintf(to_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
+        api_fetch_range(type, argument, from_date_translated, to_date_translated, &raw_data);
+    }
+    else if (date_from)
+    {
+        // translate to US date style
+        sscanf(date_from, "%2d/%2d/%4d", &day, &month, &year);
+        snprintf(from_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
+        api_fetch_range(type, argument, from_date_translated, NULL, &raw_data);
+    }
+    else if (date_to)
+    {
+        // translate to US date style
+        sscanf(date_to, "%2d/%2d/%4d", &day, &month, &year);
+        snprintf(to_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
+        api_fetch_range(type, argument, NULL, to_date_translated, &raw_data);
+    }
+    else
+    {
+        // invalid input
+        free(measurements_data.measurements_array);
+        return;
+    }
+
     json_extract_measurements(raw_data.data, &measurements_data);
 
     highest.measurements_array = find_highest(&measurements_data, string_to_param(parameter));
@@ -191,7 +231,7 @@ void highest_by_country(const char *country_code, const char *parameter, print_m
     free(measurements_data.measurements_array);
 }
 
-void highest_by_city(const char *city, const char *parameter, print_mode_t mode, const char *filename)
+void highest(request_type_t type, const char *argument, const char *parameter, print_mode_t mode, const char *filename)
 {
     int lines_written;
 
@@ -200,8 +240,8 @@ void highest_by_city(const char *city, const char *parameter, print_mode_t mode,
     measurements_t highest = {NULL, 0};
 
     init_data(&raw_data);
-    api_fetch_latest_by_city(city, &raw_data);
-    json_extract_measurements(raw_data.data, &measurements_data);
+    api_fetch_latest(type, argument, &raw_data);
+    json_extract_latest(raw_data.data, &measurements_data);
 
     highest.measurements_array = find_highest(&measurements_data, string_to_param(parameter));
     if (highest.measurements_array != NULL)
@@ -211,11 +251,11 @@ void highest_by_city(const char *city, const char *parameter, print_mode_t mode,
         {
             lines_written = write_measurements(&highest, filename);
             if (lines_written)
-                printf("    * written %d line(s) to file.\n", lines_written);
+                printf("    * written %d lines to file\n", lines_written);
         }
         else
         {
-            printf("\n    * highest amount of %s found in the following location: \n\n", parameter);
+            printf("\n[+] Highest amount of %s found in the following location: \n\n", parameter);
             print_measurements(&highest);
         }
     }
