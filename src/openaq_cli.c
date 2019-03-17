@@ -171,6 +171,16 @@ int main(int argc, char *argv[])
             else
                 highest(REQUEST_CITY, city_arg, highest_parameter, TO_SCREEN, NULL);
         }
+        else if (location_flag)
+        {
+            if (date_flag)
+            {
+                if (write_flag)
+                    highest_range(REQUEST_CITY, city_arg, highest_parameter, from_date, to_date, TO_CSV, out_file);
+                else
+                    highest_range(REQUEST_CITY, city_arg, highest_parameter, from_date, to_date, TO_SCREEN, NULL);
+            }
+        }
         else
         {
             print_info(argv[0]);

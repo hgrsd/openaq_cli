@@ -372,7 +372,7 @@ int write_measurements(measurements_t *source, const char *filename)
     {
         // if file does not exist, or if user chooses to overwrite it, write column names first
         if (strcmp(mode, "w") == 0)
-            fprintf(fp, "country_code,city,location,date,latitude,longitude,pm25,pm25_unit,pm25_timestamp,pm10,pm10_unit,pm10_timestamp,o3,o3_unit,o3_timestamp,so2,so2_unit,so2_timestamp,no2,no2_unit,no2_timestamp,co,co_unit,co_timestamp,bc,bc_unit,bc_timestamp\n");
+            fprintf(fp, "country_code,city,location,latitude,longitude,pm25,pm25_unit,pm25_timestamp,pm10,pm10_unit,pm10_timestamp,o3,o3_unit,o3_timestamp,so2,so2_unit,so2_timestamp,no2,no2_unit,no2_timestamp,co,co_unit,co_timestamp,bc,bc_unit,bc_timestamp\n");
 
         for (int i = 0; i < source->size; i++)
         {

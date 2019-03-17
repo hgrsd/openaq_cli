@@ -36,7 +36,6 @@ static void fetch_data(const char *request, void *response)
     
     api_init();
     curl_handle = curl_easy_init();
-
     if (curl_handle)
     {
         curl_easy_setopt(curl_handle, CURLOPT_URL, request);

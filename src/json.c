@@ -39,14 +39,12 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
     root = json_loads(raw_data, 0, &error);
     if (!strcmp(error.text, "\0") == 0)
     {
-        printf("Error\n");
         json_decref(root);
         return;
     }
 
     if ((results = get_results(raw_data, root)) == NULL)
     {
-        printf("Error\n");
         return;
     }
     array_size = json_array_size(results);   
