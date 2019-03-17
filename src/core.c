@@ -11,6 +11,7 @@
 #include "json.h"
 #include "string_util.h"
 
+
 void all_countries(print_mode_t mode, const char *filename)
 {   
     int lines_written;
@@ -21,7 +22,7 @@ void all_countries(print_mode_t mode, const char *filename)
     init_data(&raw_data);
     api_fetch_countries(&raw_data);
     json_extract_countries(raw_data.data, &countries_data);
-    
+   
     if (mode == TO_CSV)
     {
         lines_written = write_countries(&countries_data, filename);
@@ -79,7 +80,7 @@ void locations_by_city(const char *city, print_mode_t mode, const char *filename
     else
         print_locations(&locations_data);
 
-    clear_data(&raw_data);   
+    clear_data(&raw_data);
     free(locations_data.locations_array);
 }
 
@@ -141,7 +142,7 @@ void latest_by_location(const char *location, print_mode_t mode, const char *fil
     init_data(&raw_data);
     api_fetch_latest_by_location(location, &raw_data);
     json_extract_measurements(raw_data.data, &measurements_data);
-    
+
     if (mode == TO_CSV)
     {
         lines_written = write_measurements(&measurements_data, filename);

@@ -105,12 +105,12 @@ typedef struct _measurement_t
     char bc_unit[UNIT_MAX];
     double latitude;
     double longitude;
-    double pm25;    
+    double pm25;
     double pm10;
-    double o3;    
-    double so2;    
-    double no2;    
-    double co;    
+    double o3;
+    double so2;
+    double no2;
+    double co;
     double bc;
 } measurement_t;
 
@@ -134,6 +134,17 @@ void init_cities(cities_t *target, int nmemb);
 void init_locations(locations_t *target, int nmemb);
 // Initialises an array of countries. Must be called before using the structure.
 void init_countries(countries_t *target, int nmemb);
+
+// Prints a list of countries and their info
+void print_countries(countries_t *source);
+// Prints a list of cities and their info
+void print_cities(cities_t *source);
+// Prints a list of locations and their info
+void print_locations(locations_t *source);
+// Prints a single measurement
+void print_measurement(measurement_t *measurement);
+// Prints all measurements contained in the structure passed in.
+void print_measurements(measurements_t *source);
 
 // returns parameter_t enum based on string input
 parameter_t string_to_param(const char *string);
