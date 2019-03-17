@@ -24,8 +24,8 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
     int array_size;
     const char *parameter_string;
     
-    json_t *root, *results, *entry, *location, *measurements, *coordinates, *latitude, *longitude;
-    json_t *measurement_line, *parameter, *date, *json_value, *unit;
+    json_t *root, *results, *entry, *location, *measurements, *coordinates, *latitude, *longitude, *country_code, *city;
+    json_t *measurement_line, *parameter, *date, *json_value, *unit, *source_name;
     json_error_t error; 
  
     if (target->measurements_array != NULL)
@@ -52,15 +52,18 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
     {
         entry = json_array_get(results, i);
         location = json_object_get(entry, "location");
-         
+        city = json_object_get(entry, "city");
+        country_code = json_object_get(entry, "country"); 
         coordinates = json_object_get(entry, "coordinates");
         latitude = json_object_get(coordinates, "latitude");     
         longitude = json_object_get(coordinates, "longitude");
 
-        if (!json_is_number(latitude) || !json_is_number(longitude) || !json_is_string(location))
+        if (!json_is_number(latitude) || !json_is_number(longitude) || !json_is_string(location) || !json_is_string(city) || !json_is_string(country_code))
             continue;
 
-        strcpy_s(target->measurements_array[i].location, json_string_value(location), LOCATION_MAX);     
+        strcpy_s(target->measurements_array[i].location, json_string_value(location), LOCATION_MAX);
+        strcpy_s(target->measurements_array[i].country_code, json_string_value(country_code), COUNTRY_CODE_MAX);
+        strcpy_s(target->measurements_array[i].city, json_string_value(city), CITY_MAX);
         target->measurements_array[i].latitude = json_real_value(latitude); 
         target->measurements_array[i].longitude = json_real_value(longitude);  
         

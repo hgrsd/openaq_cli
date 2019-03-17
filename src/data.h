@@ -92,6 +92,8 @@ typedef struct _locations_t
 // holds JSON-decoded measurements for a single location
 typedef struct _measurement_t
 {
+    char country_code[COUNTRY_CODE_MAX];
+    char city[CITY_MAX];
     char location[LOCATION_MAX];
     char date[DATE_MAX];
     char pm25_unit[UNIT_MAX];

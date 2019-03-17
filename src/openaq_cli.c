@@ -12,17 +12,17 @@ int main(int argc, char *argv[])
     char *highest_parameter;
     int get_flag = 0;
     int country_flag = 0;
-    char *country;
+    char *country_arg = NULL;
     int city_flag = 0;
-    char *city;
+    char *city_arg = NULL;
     int location_flag = 0;
-    char *location;
+    char *location_arg = NULL;
     int write_flag = 0;
-    char *out_file;
+    char *out_file = NULL;
     int c;
 
     extern char *optarg;
-    extern int opterr, optopt;
+    extern int opterr, optopt, optind;
     opterr = 0; // disables getopt's error messages
 
     // read arguments from command line and set flags
@@ -32,20 +32,24 @@ int main(int argc, char *argv[])
         {
             case 'y':
                 country_flag = 1;
-                country = optarg;                
+                if (optarg[0] != '-')
+                    country_arg = optarg;
+                else
+                    optind--;                
                 break;
             
             case 'c':
                 city_flag = 1;
-                city = optarg;
+                city_arg = optarg;
                 break;
 
             case 'l':
                 location_flag = 1;
-                location = optarg;
+                location_arg = optarg;
                 break;
             
             case 'w':
+                printf("[+] Entering writing mode.\n");
                 write_flag = 1;
                 out_file = optarg;
                 break;
@@ -63,7 +67,7 @@ int main(int argc, char *argv[])
                 if (optopt == 'y')
                 {
                     country_flag = 1;
-                    country = NULL;
+                    country_arg = NULL;
                 }
                 else
                 {
@@ -74,19 +78,28 @@ int main(int argc, char *argv[])
     }
 
     // process flags and call relevant function
-    if (get_flag == 1)
+    if (get_flag)
     {
-        if (country_flag == 1 && country != NULL)
+        if (country_flag && country_arg != NULL)
         {
-            print_latest_by_country(country);
+            if (write_flag)
+                latest_by_country(country_arg, TO_CSV, out_file);
+            else
+                latest_by_country(country_arg, TO_SCREEN, NULL);
         }
-        else if (city_flag == 1)
+        else if (city_flag)
         {
-            print_latest_by_city(city);
+            if (write_flag)
+                latest_by_city(city_arg, TO_CSV, out_file);
+            else
+                latest_by_city(city_arg, TO_SCREEN, NULL);
         }
-        else if (location_flag == 1)
+        else if (location_flag)
         {
-            print_latest_by_location(location);
+            if (write_flag)
+                latest_by_location(location_arg, TO_CSV, out_file);
+            else
+                latest_by_location(location_arg, TO_SCREEN, NULL);
         }
         else
         {
@@ -94,15 +107,21 @@ int main(int argc, char *argv[])
             return 1;
         }
     }
-    else if (highest_flag == 1)
+    else if (highest_flag)
     {
-        if (country_flag == 1 && country != NULL)
+        if (country_flag && country_arg != NULL)
         {
-            print_highest_by_country(country, highest_parameter);
+            if (write_flag)
+                highest_by_country(country_arg, highest_parameter, TO_CSV, out_file);
+            else
+                highest_by_country(country_arg, highest_parameter, TO_SCREEN, NULL);
         }
-        else if (city_flag == 1)
+        else if (city_flag)
         {
-            print_highest_by_city(city, highest_parameter);
+            if (write_flag)
+                highest_by_city(city_arg, highest_parameter, TO_CSV, out_file);
+            else
+                highest_by_city(city_arg, highest_parameter, TO_SCREEN, NULL);
         }
         else
         {
@@ -110,18 +129,26 @@ int main(int argc, char *argv[])
             return 1;
         }
     }
-    else if (country_flag == 1)
+    else if (country_flag)
     {
-        if (country == NULL)
-            print_all_countries();
+        if(write_flag)
+            all_countries(TO_CSV, out_file);
         else
-        {
-            print_cities_by_country(country);
-        }
+            all_countries(TO_SCREEN, NULL);
     }
-    else if (city_flag == 1)
+    else if (city_flag)
     {
-        print_locations_by_city(city);
+        if (write_flag)
+            cities_by_country(city_arg, TO_CSV, out_file);
+        else
+            cities_by_country(city_arg, TO_SCREEN, NULL);
+    }
+    else if (location_flag)
+    {
+        if (write_flag)
+            locations_by_city(location_arg, TO_CSV, out_file);
+        else
+            locations_by_city(location_arg, TO_SCREEN, NULL);
     }
     else
     {

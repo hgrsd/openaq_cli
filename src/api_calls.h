@@ -1,11 +1,11 @@
 #ifndef _API_CALLS_H_
 #define _API_CALLS_H_
 
-#define URL_CITIES "https://api.openaq.org/v1/cities?limit=1000&country=%s"
-#define URL_COUNTRIES "https://api.openaq.org/v1/countries%s"
-#define URL_LOCATIONS "https://api.openaq.org/v1/locations?limit=100&city=%s"
-#define URL_LATEST_BY_CITY "https://api.openaq.org/v1/latest?city=%s"
-#define URL_LATEST_BY_COUNTRY "https://api.openaq.org/v1/latest?limit=1000&country=%s"
+#define URL_CITIES "https://api.openaq.org/v1/cities?limit=10000&country=%s"
+#define URL_COUNTRIES "https://api.openaq.org/v1/countries"
+#define URL_LOCATIONS "https://api.openaq.org/v1/locations?limit=10000&city=%s"
+#define URL_LATEST_BY_CITY "https://api.openaq.org/v1/latest?&limit=10000&city=%s"
+#define URL_LATEST_BY_COUNTRY "https://api.openaq.org/v1/latest?limit=10000&country=%s"
 #define URL_LATEST_BY_LOCATION "https://api.openaq.org/v1/latest?location=%s"
 
 #define MAX_REQUEST_SIZE 256

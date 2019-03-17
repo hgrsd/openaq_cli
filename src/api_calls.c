@@ -51,10 +51,7 @@ static void fetch_data(const char *request, void *response)
 
 void api_fetch_countries(void *response)
 {
-    char request[MAX_REQUEST_SIZE];
-
-    sprintf(request, URL_COUNTRIES, "?limit=200");
-    fetch_data(request, response);
+    fetch_data(URL_COUNTRIES, response);
 }
 
 void api_fetch_cities(const char *country, void *response)
