@@ -19,6 +19,9 @@ int main(int argc, char *argv[])
     char *location_arg = NULL;
     int write_flag = 0;
     char *out_file = NULL;
+    int date_flag = 0;
+    char *from_date = NULL;
+    char *to_date = NULL;
     int c;
 
     extern char *optarg;
@@ -26,7 +29,7 @@ int main(int argc, char *argv[])
     opterr = 0; // disables getopt's error messages
 
     // read arguments from command line and set flags
-    while ((c = getopt(argc, argv, "gy:c:l:w:h:")) != -1)
+    while ((c = getopt(argc, argv, "gy:c:l:w:h:f:t:")) != -1)
     {
         switch(c)
         {
@@ -63,6 +66,16 @@ int main(int argc, char *argv[])
                 get_flag = 1;
                 break;
             
+            case 'f':
+                date_flag = 1;
+                from_date = optarg;
+                break;
+            
+            case 't':
+                date_flag = 1;
+                to_date = optarg;
+                break;
+
             case '?':
                 if (optopt == 'y')
                 {
@@ -82,24 +95,45 @@ int main(int argc, char *argv[])
     {
         if (country_flag && country_arg != NULL)
         {
-            if (write_flag)
-                latest_by_country(country_arg, TO_CSV, out_file);
+            if (date_flag)
+            {
+                if (write_flag)
+                    date_range(REQUEST_COUNTRY, country_arg, from_date, to_date, TO_CSV, out_file);
+                else
+                    date_range(REQUEST_COUNTRY, country_arg, from_date, to_date, TO_SCREEN, NULL);
+            }
+            else if (write_flag)
+                latest(REQUEST_COUNTRY, country_arg, TO_CSV, out_file);
             else
-                latest_by_country(country_arg, TO_SCREEN, NULL);
+                latest(REQUEST_COUNTRY, country_arg, TO_SCREEN, NULL);
         }
         else if (city_flag)
         {
-            if (write_flag)
-                latest_by_city(city_arg, TO_CSV, out_file);
+            if (date_flag)
+            {
+                if (write_flag)
+                    date_range(REQUEST_CITY, city_arg, from_date, to_date, TO_CSV, out_file);
+                else
+                    date_range(REQUEST_CITY, city_arg, from_date, to_date, TO_SCREEN, NULL);
+            }
+            else if (write_flag)
+                latest(REQUEST_CITY, city_arg, TO_CSV, out_file);
             else
-                latest_by_city(city_arg, TO_SCREEN, NULL);
+                latest(REQUEST_CITY, city_arg, TO_SCREEN, NULL);
         }
         else if (location_flag)
         {
-            if (write_flag)
-                latest_by_location(location_arg, TO_CSV, out_file);
+            if (date_flag)
+            {
+                if (write_flag)
+                    date_range(REQUEST_LOCATION, location_arg, from_date, to_date, TO_CSV, out_file);
+                else
+                    date_range(REQUEST_LOCATION, location_arg, from_date, to_date, TO_SCREEN, NULL);
+            }
+            else if (write_flag)
+                latest(REQUEST_LOCATION, location_arg, TO_CSV, out_file);
             else
-                latest_by_location(location_arg, TO_SCREEN, NULL);
+                latest(REQUEST_LOCATION, location_arg, TO_SCREEN, NULL);
         }
         else
         {
@@ -111,17 +145,41 @@ int main(int argc, char *argv[])
     {
         if (country_flag && country_arg != NULL)
         {
-            if (write_flag)
-                highest_by_country(country_arg, highest_parameter, TO_CSV, out_file);
+            if (date_flag)
+            {
+                if (write_flag)
+                    highest_range(REQUEST_COUNTRY, country_arg, highest_parameter, from_date, to_date, TO_CSV, out_file);
+                else
+                    highest_range(REQUEST_COUNTRY, country_arg, highest_parameter, from_date, to_date, TO_SCREEN, NULL);
+            }
+            else if (write_flag)
+                highest(REQUEST_COUNTRY, country_arg, highest_parameter, TO_CSV, out_file);
             else
-                highest_by_country(country_arg, highest_parameter, TO_SCREEN, NULL);
+                highest(REQUEST_COUNTRY, country_arg, highest_parameter, TO_SCREEN, NULL);
         }
         else if (city_flag)
         {
-            if (write_flag)
-                highest_by_city(city_arg, highest_parameter, TO_CSV, out_file);
+            if (date_flag)
+            {
+                if (write_flag)
+                    highest_range(REQUEST_CITY, city_arg, highest_parameter, from_date, to_date, TO_CSV, out_file);
+                else
+                    highest_range(REQUEST_CITY, city_arg, highest_parameter, from_date, to_date, TO_SCREEN, NULL);
+            }
+            else if (write_flag)
+                highest(REQUEST_CITY, city_arg, highest_parameter, TO_CSV, out_file);
             else
-                highest_by_city(city_arg, highest_parameter, TO_SCREEN, NULL);
+                highest(REQUEST_CITY, city_arg, highest_parameter, TO_SCREEN, NULL);
+        }
+        else if (location_flag)
+        {
+            if (date_flag)
+            {
+                if (write_flag)
+                    highest_range(REQUEST_CITY, city_arg, highest_parameter, from_date, to_date, TO_CSV, out_file);
+                else
+                    highest_range(REQUEST_CITY, city_arg, highest_parameter, from_date, to_date, TO_SCREEN, NULL);
+            }
         }
         else
         {

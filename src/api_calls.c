@@ -3,6 +3,8 @@
 #include <stdlib.h>
 
 #include "api_calls.h"
+#include "data.h"
+#include "date_util.h"
 
 static int write_callback(void *input, size_t size, size_t nmemb, void *target)
 {
@@ -57,14 +59,7 @@ void api_fetch_countries(void *response)
 void api_fetch_cities(const char *country, void *response)
 {
     char request[MAX_REQUEST_SIZE];
-
-    if (strlen(country) + strlen(URL_CITIES) > MAX_REQUEST_SIZE - 1)
-    {
-        printf("Country code too long.\n");
-        return;
-    }
-
-    sprintf(request, URL_CITIES, country);
+    snprintf(request, MAX_REQUEST_SIZE - 1, URL_CITIES, country);
     fetch_data(request, response);
 }
 
@@ -76,79 +71,87 @@ void api_fetch_locations_by_city(const char *city, void *response)
     CURL *curl_handle; 
     curl_handle = curl_easy_init();
     
-    if (strlen(city) + strlen(URL_LOCATIONS) > MAX_REQUEST_SIZE -1)
-    {
-        printf("City name too long.\n");
-        return;
-    }
-
     city_urlencoded = curl_easy_escape(curl_handle, city, 0);
-    sprintf(request, URL_LOCATIONS, city_urlencoded);
+    snprintf(request, MAX_REQUEST_SIZE - 1, URL_LOCATIONS, city_urlencoded);
     fetch_data(request, response);
 
     curl_free(city_urlencoded);
     curl_easy_cleanup(curl_handle);
 }
 
-void api_fetch_latest_by_country(const char *country_code, void *response)
+void api_fetch_range(request_type_t type, const char *argument, const char *date_from, const char *date_to, void *response)
 {
     char request[MAX_REQUEST_SIZE];
+    char *argument_urlencoded;
 
     CURL *curl_handle;
     curl_handle = curl_easy_init();
+
+    argument_urlencoded = curl_easy_escape(curl_handle, argument, 0);
     
-    if (strlen(country_code) + strlen(URL_LATEST_BY_COUNTRY) > MAX_REQUEST_SIZE - 1)
+    if (type == REQUEST_COUNTRY)
     {
-        printf("Country code too long.\n");
+        if (date_from && date_to)
+            snprintf(request, MAX_REQUEST_SIZE - 1, URL_MEASUREMENTS_RANGE, "country", argument_urlencoded, date_from, date_to);
+        else if (date_from)
+            snprintf(request, MAX_REQUEST_SIZE - 1, URL_MEASUREMENTS_FROM, "country", argument_urlencoded, date_from);
+        else
+            snprintf(request, MAX_REQUEST_SIZE - 1, URL_MEASUREMENTS_TO, "country", argument_urlencoded, date_to);
+    }
+    else if (type == REQUEST_CITY)
+    {
+        if (date_from && date_to)
+            snprintf(request, MAX_REQUEST_SIZE - 1, URL_MEASUREMENTS_RANGE, "city", argument_urlencoded, date_from, date_to);
+        else if (date_from)
+            snprintf(request, MAX_REQUEST_SIZE - 1, URL_MEASUREMENTS_FROM, "city", argument_urlencoded, date_from);
+        else
+            snprintf(request, MAX_REQUEST_SIZE - 1, URL_MEASUREMENTS_TO, "city", argument_urlencoded, date_to);
+    }
+    else if (type == REQUEST_LOCATION)
+    {
+        if (date_from && date_to)
+            snprintf(request, MAX_REQUEST_SIZE - 1, URL_MEASUREMENTS_RANGE, "location", argument_urlencoded, date_from, date_to);
+        else if (date_from)
+            snprintf(request, MAX_REQUEST_SIZE - 1, URL_MEASUREMENTS_FROM, "location", argument_urlencoded, date_from);
+        else
+            snprintf(request, MAX_REQUEST_SIZE - 1, URL_MEASUREMENTS_TO, "location", argument_urlencoded, date_to);
+    }
+    else
+    {
         return;
     }
-
-    sprintf(request, URL_LATEST_BY_COUNTRY, country_code);
     fetch_data(request, response);
 
     curl_easy_cleanup(curl_handle);
 }
 
-void api_fetch_latest_by_city(const char *city, void *response)
+void api_fetch_latest(request_type_t type, const char *argument, void *response)
 {
     char request[MAX_REQUEST_SIZE];
-    char *city_urlencoded;
+    char *argument_urlencoded;
 
     CURL *curl_handle;
     curl_handle = curl_easy_init();
+
+    argument_urlencoded = curl_easy_escape(curl_handle, argument, 0);
     
-    if (strlen(city) + strlen(URL_LATEST_BY_CITY) > MAX_REQUEST_SIZE - 1)
+    if (type == REQUEST_COUNTRY)
     {
-        printf("City name too long.\n");
+        snprintf(request, MAX_REQUEST_SIZE - 1, URL_LATEST, "country", argument_urlencoded);
+    }
+    else if (type == REQUEST_CITY)
+    {
+        snprintf(request, MAX_REQUEST_SIZE - 1, URL_LATEST, "city", argument_urlencoded);
+    }
+    else if (type == REQUEST_LOCATION)
+    {
+        snprintf(request, MAX_REQUEST_SIZE - 1, URL_LATEST, "location", argument_urlencoded);
+    }
+    else
+    {
         return;
     }
-
-    city_urlencoded = curl_easy_escape(curl_handle, city, 0);
-    sprintf(request, URL_LATEST_BY_CITY, city_urlencoded);
     fetch_data(request, response);
 
-    curl_free(city_urlencoded);
-    curl_easy_cleanup(curl_handle);    
-}
-
-void api_fetch_latest_by_location(const char *location, void *response)
-{
-    char request[MAX_REQUEST_SIZE];
-    char *location_urlencoded;
-
-    CURL *curl_handle;
-    curl_handle = curl_easy_init();
-    
-    if (strlen(location) + strlen(URL_LATEST_BY_LOCATION) > MAX_REQUEST_SIZE - 1)
-    {
-        printf("Location name too long.\n");
-        return;
-    }
-
-    location_urlencoded = curl_easy_escape(curl_handle, location, 0);
-    sprintf(request, URL_LATEST_BY_LOCATION, location_urlencoded);
-    fetch_data(request, response);
-
-    curl_free(location_urlencoded);
     curl_easy_cleanup(curl_handle);
 }

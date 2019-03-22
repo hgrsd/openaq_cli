@@ -8,6 +8,10 @@
 #include "../src/data.h"
 #include "../src/json.h"
 
+/*
+TODO: Add test for json_extract_measurements_range()
+*/
+
 void TEST_data_find_highest(void)
 {
     measurement_t *highest;
@@ -15,7 +19,7 @@ void TEST_data_find_highest(void)
 
     printf("[+] Testing find_highest()\n");
 
-    json_extract_measurements(JSON_LATEST_TEST, &measurements_data);
+    json_extract_latest(JSON_LATEST_TEST, &measurements_data);
 
     highest = find_highest(&measurements_data, string_to_param("PM25"));
     assert(highest->substances[PARAM_PM25].value == 70);
@@ -23,11 +27,11 @@ void TEST_data_find_highest(void)
     highest = find_highest(&measurements_data, string_to_param("BC"));
     assert(highest == NULL);
 
-    json_extract_measurements(JSON_LATEST_TEST_EMPTY, &measurements_data);
+    json_extract_latest(JSON_LATEST_TEST_EMPTY, &measurements_data);
     highest = find_highest(&measurements_data, string_to_param("CO"));
     assert(highest->substances[PARAM_CO].value == 2);
 
-    json_extract_measurements(JSON_LATEST_TEST_MALFORMED, &measurements_data);
+    json_extract_latest(JSON_LATEST_TEST_MALFORMED, &measurements_data);
     highest = find_highest(&measurements_data, string_to_param("PM25"));
     assert(highest == NULL);
 
@@ -121,13 +125,13 @@ void TEST_json_extract_countries(void)
     printf("    [PASS]\n\n");
 }
 
-void TEST_json_extract_measurements(void)
+void TEST_json_extract_latest(void)
 {
     measurements_t measurements_data = {NULL, 0};
 
-    printf("[+] Testing json_extract_measurements()\n");
+    printf("[+] Testing json_extract_latest()\n");
 
-    json_extract_measurements(JSON_LATEST_TEST, &measurements_data);
+    json_extract_latest(JSON_LATEST_TEST, &measurements_data);
 
     assert(measurements_data.size == 5);
     assert(strcmp(measurements_data.measurements_array[0].location, " 淮河道") == 0);
@@ -153,11 +157,11 @@ void TEST_json_extract_measurements(void)
 
 
     // malformed
-    json_extract_measurements(JSON_LATEST_TEST_MALFORMED, &measurements_data);
+    json_extract_latest(JSON_LATEST_TEST_MALFORMED, &measurements_data);
     assert(measurements_data.size == 0);
 
     // empty parameters
-    json_extract_measurements(JSON_LATEST_TEST_EMPTY, &measurements_data);
+    json_extract_latest(JSON_LATEST_TEST_EMPTY, &measurements_data);
     assert(measurements_data.measurements_array[0].substances[PARAM_PM25].value == -1);
     assert(measurements_data.measurements_array[0].substances[PARAM_PM10].value == -1);
     assert(measurements_data.measurements_array[0].substances[PARAM_NO2].value == -1);
@@ -261,7 +265,7 @@ int main(void)
     TEST_json_extract_cities();
     TEST_json_extract_locations();
     TEST_json_extract_countries();
-    TEST_json_extract_measurements();
+    TEST_json_extract_latest();
     TEST_data_find_highest();   
 }
 

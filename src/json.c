@@ -25,8 +25,118 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
     int array_size;
     const char *parameter_string;
     
-    json_t *root, *results, *entry, *location, *measurements, *coordinates, *latitude, *longitude, *country_code, *city;
-    json_t *measurement_line, *parameter, *date, *json_value, *unit, *source_name;
+    json_t *root, *results, *entry, *location, *coordinates, *latitude, *longitude, 
+            *country_code, *city, *parameter, *date, *date_utc, *json_value, *unit;
+    json_error_t error; 
+ 
+    if (target->measurements_array != NULL)
+    {
+        target->size = 0;
+        free(target->measurements_array);
+        target->measurements_array = NULL;
+    }
+   
+    root = json_loads(raw_data, 0, &error);
+    if (!strcmp(error.text, "\0") == 0)
+    {
+        json_decref(root);
+        return;
+    }
+
+    if ((results = get_results(raw_data, root)) == NULL)
+    {
+        return;
+    }
+    array_size = json_array_size(results);   
+    target->measurements_array = (measurement_t *) malloc(sizeof(measurement_t) * array_size);
+    init_measurements(target, array_size);
+    for (int i = 0; i < array_size; i++)
+    {
+        entry = json_array_get(results, i);
+        location = json_object_get(entry, "location");
+        city = json_object_get(entry, "city");
+        country_code = json_object_get(entry, "country"); 
+        coordinates = json_object_get(entry, "coordinates");
+        latitude = json_object_get(coordinates, "latitude");     
+        longitude = json_object_get(coordinates, "longitude");
+        parameter = json_object_get(entry, "parameter");
+        date = json_object_get(entry, "date");
+        date_utc = json_object_get(date, "utc");
+        json_value = json_object_get(entry, "value");
+        unit = json_object_get(entry, "unit");
+        val = json_number_value(json_value);
+
+        if (!json_is_number(latitude) || !json_is_number(longitude) || !json_is_string(location) || !json_is_string(city) 
+                || !json_is_string(country_code) || val < 0 || !json_is_string(unit)
+                || !json_is_string(date_utc) || !json_is_string(parameter))
+        {
+            continue;   
+        }
+        strcpy_s(target->measurements_array[i].location, json_string_value(location), LOCATION_MAX);
+        strcpy_s(target->measurements_array[i].country_code, json_string_value(country_code), COUNTRY_CODE_MAX);
+        strcpy_s(target->measurements_array[i].city, json_string_value(city), CITY_MAX);
+        target->measurements_array[i].latitude = json_real_value(latitude); 
+        target->measurements_array[i].longitude = json_real_value(longitude);  
+        
+        parameter_string = json_string_value(parameter);   
+
+        if (strcmp(parameter_string, "pm25") == 0)
+        {
+            target->measurements_array[i].substances[PARAM_PM25].value = val;
+            target->measurements_array[i].substances[PARAM_PM25].timestamp = string_to_timestamp(json_string_value(date_utc));
+            strcpy_s(target->measurements_array[i].substances[PARAM_PM25].unit, json_string_value(unit), UNIT_MAX);
+        }
+        else if (strcmp(parameter_string, "pm10") == 0)
+        {
+            target->measurements_array[i].substances[PARAM_PM10].value = val;
+            target->measurements_array[i].substances[PARAM_PM10].timestamp = string_to_timestamp(json_string_value(date_utc));
+            strcpy_s(target->measurements_array[i].substances[PARAM_PM10].unit, json_string_value(unit), UNIT_MAX);
+        }
+        else if (strcmp(parameter_string, "o3") == 0)
+        {
+            target->measurements_array[i].substances[PARAM_O3].value = val;
+            target->measurements_array[i].substances[PARAM_O3].timestamp = string_to_timestamp(json_string_value(date_utc));
+            strcpy_s(target->measurements_array[i].substances[PARAM_O3].unit, json_string_value(unit), UNIT_MAX);
+        }
+        else if (strcmp(parameter_string, "so2") == 0)
+        {
+            target->measurements_array[i].substances[PARAM_SO2].value = val;
+            target->measurements_array[i].substances[PARAM_SO2].timestamp = string_to_timestamp(json_string_value(date_utc));
+            strcpy_s(target->measurements_array[i].substances[PARAM_SO2].unit, json_string_value(unit), UNIT_MAX);
+        }
+        else if (strcmp(parameter_string, "no2") == 0)
+        {
+            target->measurements_array[i].substances[PARAM_NO2].value = val;
+            target->measurements_array[i].substances[PARAM_NO2].timestamp = string_to_timestamp(json_string_value(date_utc));
+            strcpy_s(target->measurements_array[i].substances[PARAM_NO2].unit, json_string_value(unit), UNIT_MAX);
+        }
+        else if (strcmp(parameter_string, "co") == 0)
+        {
+            target->measurements_array[i].substances[PARAM_CO].value = val;
+            target->measurements_array[i].substances[PARAM_CO].timestamp = string_to_timestamp(json_string_value(date_utc));
+            strcpy_s(target->measurements_array[i].substances[PARAM_CO].unit, json_string_value(unit), UNIT_MAX);
+        }
+        else if (strcmp(parameter_string, "bc") == 0)
+        {
+            target->measurements_array[i].substances[PARAM_BC].value = val;
+            target->measurements_array[i].substances[PARAM_BC].timestamp = string_to_timestamp(json_string_value(date_utc));
+            strcpy_s(target->measurements_array[i].substances[PARAM_BC].unit, json_string_value(unit), UNIT_MAX);
+        }
+        else
+            printf("Unknown parameter: %s. Ignoring.\n", parameter_string);
+    }
+
+    json_decref(root);
+}
+
+void json_extract_latest(const char *raw_data, measurements_t *target)
+{
+    double val;
+    int array_size;
+    const char *parameter_string;
+    
+    json_t *root, *results, *entry, *location, *measurements, *coordinates, *latitude, 
+            *longitude, *country_code, *city, *measurement_line, *parameter, *date, *json_value, *unit, *source_name;
     json_error_t error; 
  
     if (target->measurements_array != NULL)
