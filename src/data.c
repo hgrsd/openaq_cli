@@ -14,6 +14,16 @@ size_t offsets[] = {
     0
 };
 
+const char* parameter_names[N_PARAMETERS] = {
+    "pm25",
+    "pm10",
+    "no2",
+    "co",
+    "bc",
+    "o3",
+    "so2"
+};
+
 parameter_t string_to_param(const char* string)
 {
     if (!strcmp(string, "pm25"))
@@ -57,7 +67,7 @@ void init_measurements(measurements_t *target, int nmemb)
         strcpy(target->measurements_array[i].country_code, "\0");
         target->measurements_array[i].latitude = 0;
         target->measurements_array[i].longitude = 0;
-        for (int j = 0; j < N_SUBSTANCES; j++)
+        for (int j = 0; j < N_PARAMETERS; j++)
         {
             target->measurements_array[i].substances[j].timestamp = -1;
             target->measurements_array[i].substances[j].value = -1;

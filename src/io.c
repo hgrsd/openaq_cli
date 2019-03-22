@@ -85,7 +85,7 @@ static inline void print_value(const char *measurement, float value, const char 
 
 static void print_measurement(measurement_t *measurement)
 {
-    const char *labels[N_SUBSTANCES] = {
+    const char *labels[N_PARAMETERS] = {
         "    * PM25",
         "    * PM10",
         "    * O3",
@@ -100,7 +100,7 @@ static void print_measurement(measurement_t *measurement)
     printf("    * Location: \t\t%s\n", measurement->location);
     printf("    * Latitude:\t\t\t%f\n", measurement->latitude);
     printf("    * Longitude:\t\t%f\n", measurement->longitude);
-    for (int i = 0; i < N_SUBSTANCES; i++)
+    for (int i = 0; i < N_PARAMETERS; i++)
     {
         if (measurement->substances[i].value != -1)
         {
@@ -154,7 +154,7 @@ static void write_measurement(measurement_t *measurement, FILE *fp)
                                   measurement->location,
                                   measurement->latitude,
                                   measurement->longitude);
-    for (int i = 0; i < N_SUBSTANCES; i++)
+    for (int i = 0; i < N_PARAMETERS; i++)
     {
         fprintf(fp, ",%f,%s,%ld", measurement->substances[i].value,
                                   measurement->substances[i].unit,
@@ -340,8 +340,16 @@ int write_measurements(measurements_t *source, const char *filename)
     {
         // if file does not exist, or if user chooses to overwrite it, write column names first
         if (strcmp(mode, "w") == 0)
-            fprintf(fp, "country_code,city,location,latitude,longitude,pm25,pm25_unit,pm25_timestamp,pm10,pm10_unit,pm10_timestamp,o3,o3_unit,o3_timestamp,so2,so2_unit,so2_timestamp,no2,no2_unit,no2_timestamp,co,co_unit,co_timestamp,bc,bc_unit,bc_timestamp\n");
-
+        {
+            fprintf(fp, "country_code,city,location,latitude,longitude");
+            for (int i = 0; i < N_PARAMETERS; i++)
+            {
+                fprintf(fp, ",%s,%s%s,%s%s", parameter_names[i],
+                                         parameter_names[i], "_unit",
+                                         parameter_names[i], "_timestamp");
+            }
+            fprintf(fp, "\n");
+        }
         for (int i = 0; i < source->size; i++)
         {
             if (strcmp(source->measurements_array[i].location, "\0") != 0)

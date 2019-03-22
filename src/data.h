@@ -11,7 +11,7 @@
 #define COUNTRY_CODE_MAX 3
 #define DATE_MAX 30
 #define UNIT_MAX 12
-#define N_SUBSTANCES 7
+#define N_PARAMETERS 7
 
 // all possible parameters that may be returned
 typedef enum parameter
@@ -26,6 +26,8 @@ typedef enum parameter
     PARAM_INVALID
 } parameter_t;
 
+// names of parameters
+extern const char* parameter_names[N_PARAMETERS];
 // offset of each parameter, defined in data.c
 extern size_t offsets[];
 
@@ -101,7 +103,7 @@ typedef struct _substance_t
 // holds JSON-decoded measurements for a single location
 typedef struct _measurement_t
 {   
-    substance_t substances[N_SUBSTANCES];
+    substance_t substances[N_PARAMETERS];
     char country_code[COUNTRY_CODE_MAX];
     char city[CITY_MAX];
     char location[LOCATION_MAX];
