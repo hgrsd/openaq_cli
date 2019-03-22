@@ -16,19 +16,19 @@ size_t offsets[] = {
 
 parameter_t string_to_param(const char* string)
 {
-    if (!strcmp(string, "PM25"))
+    if (!strcmp(string, "pm25"))
         return PARAM_PM25;
-    else if (!strcmp(string, "PM10"))
+    else if (!strcmp(string, "pm10"))
         return PARAM_PM10;
-    else if (!strcmp(string, "NO2"))
+    else if (!strcmp(string, "no2"))
         return PARAM_NO2;
-    else if (!strcmp(string, "CO"))
+    else if (!strcmp(string, "co"))
         return PARAM_CO; 
-    else if (!strcmp(string, "BC"))
+    else if (!strcmp(string, "bc"))
         return PARAM_BC;
-    else if (!strcmp(string, "O3"))
+    else if (!strcmp(string, "o3"))
         return PARAM_O3; 
-    else if (!strcmp(string, "SO2"))
+    else if (!strcmp(string, "so2"))
         return PARAM_SO2;
     else
         return PARAM_INVALID;    
@@ -118,7 +118,7 @@ measurement_t *find_highest(measurements_t *measurements_data, parameter_t param
         
     if (offset == 0)
     {
-        printf("Invalid parameter. Valid parameters are: PM25, PM10, NO2, CO, BC, O3, SO2.\n");
+        printf("Invalid parameter. Valid parameters are: pm25, pm10, no2, co, bc, o3, so2.\n");
         return NULL;
     }
 

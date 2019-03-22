@@ -1,4 +1,8 @@
+#include <ctype.h>
+#include <string.h>
+
 #include "string_util.h"
+
 
 int strcpy_s(char *dest, const char *src, size_t dest_size)
 {
@@ -18,4 +22,12 @@ int strcpy_s(char *dest, const char *src, size_t dest_size)
 		dest++, src++);
 		
 	return 0;
+}
+
+void str_tolower(char *string)
+{
+	for (int i = 0; i < strlen(string); i++)
+	{
+		string[i] = tolower(string[i]);
+	}
 }

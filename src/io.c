@@ -85,48 +85,31 @@ static inline void print_value(const char *measurement, float value, const char 
 
 static void print_measurement(measurement_t *measurement)
 {
+    const char *labels[N_SUBSTANCES] = {
+        "    * PM25",
+        "    * PM10",
+        "    * O3",
+        "    * SO2",
+        "    * NO2",
+        "    * CO",
+        "    * BC"
+    };
+
     printf("    * Country: \t\t\t%s\n", measurement->country_code);
     printf("    * City: \t\t\t%s\n", measurement->city);
     printf("    * Location: \t\t%s\n", measurement->location);
     printf("    * Latitude:\t\t\t%f\n", measurement->latitude);
     printf("    * Longitude:\t\t%f\n", measurement->longitude);
-    
-    if (measurement->substances[PARAM_BC].value != -1)
-        print_value("    * BC", 
-                    measurement->substances[PARAM_BC].value, 
-                    measurement->substances[PARAM_BC].unit, 
-                    measurement->substances[PARAM_BC].timestamp);
-    if (measurement->substances[PARAM_CO].value != -1)
-        print_value("    * CO", 
-                    measurement->substances[PARAM_CO].value, 
-                    measurement->substances[PARAM_CO].unit, 
-                    measurement->substances[PARAM_CO].timestamp);
-    if (measurement->substances[PARAM_NO2].value != -1)
-        print_value("    * NO2", 
-                    measurement->substances[PARAM_NO2].value, 
-                    measurement->substances[PARAM_NO2].unit, 
-                    measurement->substances[PARAM_NO2].timestamp);
-    if (measurement->substances[PARAM_O3].value != -1)
-        print_value("    * O3", 
-                    measurement->substances[PARAM_O3].value, 
-                    measurement->substances[PARAM_O3].unit, 
-                    measurement->substances[PARAM_O3].timestamp);
-    if (measurement->substances[PARAM_PM10].value != -1)
-        print_value("    * PM10", 
-                    measurement->substances[PARAM_PM10].value, 
-                    measurement->substances[PARAM_PM10].unit, 
-                    measurement->substances[PARAM_PM10].timestamp);
-    if (measurement->substances[PARAM_PM25].value != -1)
-        print_value("    * PM25", 
-                    measurement->substances[PARAM_PM25].value, 
-                    measurement->substances[PARAM_PM25].unit, 
-                    measurement->substances[PARAM_PM25].timestamp);
-    if (measurement->substances[PARAM_SO2].value != -1)
-       print_value("    * SO2", 
-                    measurement->substances[PARAM_SO2].value, 
-                    measurement->substances[PARAM_SO2].unit, 
-                    measurement->substances[PARAM_SO2].timestamp);
-        
+    for (int i = 0; i < N_SUBSTANCES; i++)
+    {
+        if (measurement->substances[i].value != -1)
+        {
+            print_value(labels[i], 
+                        measurement->substances[i].value,
+                        measurement->substances[i].unit,
+                        measurement->substances[i].timestamp);
+        }
+    }   
     printf("\n");
 }
 
@@ -166,33 +149,18 @@ static void write_location(location_t *source, FILE *fp)
 
 static void write_measurement(measurement_t *measurement, FILE *fp)
 {
-    fprintf(fp, "%s,%s,%s,%f,%f,%f,%s,%ld,%f,%s,%ld,%f,%s,%ld,%f,%s,%ld,%f,%s,%ld,%f,%s,%ld,%f,%s,%ld\n",
-                measurement->country_code,
-                measurement->city,
-                measurement->location,
-                measurement->latitude,
-                measurement->longitude,
-                measurement->substances[PARAM_PM25].value,
-                measurement->substances[PARAM_PM25].unit,
-                measurement->substances[PARAM_PM25].timestamp,
-                measurement->substances[PARAM_PM10].value,
-                measurement->substances[PARAM_PM10].unit,
-                measurement->substances[PARAM_PM10].timestamp,
-                measurement->substances[PARAM_O3].value,
-                measurement->substances[PARAM_O3].unit,
-                measurement->substances[PARAM_O3].timestamp,
-                measurement->substances[PARAM_SO2].value,
-                measurement->substances[PARAM_SO2].unit,
-                measurement->substances[PARAM_SO2].timestamp,
-                measurement->substances[PARAM_NO2].value,
-                measurement->substances[PARAM_NO2].unit,
-                measurement->substances[PARAM_NO2].timestamp,
-                measurement->substances[PARAM_CO].value,
-                measurement->substances[PARAM_CO].unit,
-                measurement->substances[PARAM_CO].timestamp,
-                measurement->substances[PARAM_BC].value,
-                measurement->substances[PARAM_BC].unit,
-                measurement->substances[PARAM_BC].timestamp);
+    fprintf(fp, "%s,%s,%s,%f,%f", measurement->country_code,
+                                  measurement->city,
+                                  measurement->location,
+                                  measurement->latitude,
+                                  measurement->longitude);
+    for (int i = 0; i < N_SUBSTANCES; i++)
+    {
+        fprintf(fp, ",%f,%s,%ld", measurement->substances[i].value,
+                                  measurement->substances[i].unit,
+                                  measurement->substances[i].timestamp); 
+    }
+    fprintf(fp, "\n");
 }
 
 void print_countries(countries_t *source)

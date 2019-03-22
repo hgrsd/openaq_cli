@@ -23,6 +23,7 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
 {
     double val;
     int array_size;
+    parameter_t parameter_id;
     const char *parameter_string;
     
     json_t *root, *results, *entry, *location, *coordinates, *latitude, *longitude, 
@@ -77,50 +78,13 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
         strcpy_s(target->measurements_array[i].city, json_string_value(city), CITY_MAX);
         target->measurements_array[i].latitude = json_real_value(latitude); 
         target->measurements_array[i].longitude = json_real_value(longitude);  
-        
-        parameter_string = json_string_value(parameter);   
-
-        if (strcmp(parameter_string, "pm25") == 0)
+        parameter_string = json_string_value(parameter);  
+        parameter_id = string_to_param(parameter_string);
+        if (parameter_id != PARAM_INVALID)
         {
-            target->measurements_array[i].substances[PARAM_PM25].value = val;
-            target->measurements_array[i].substances[PARAM_PM25].timestamp = string_to_timestamp(json_string_value(date_utc));
-            strcpy_s(target->measurements_array[i].substances[PARAM_PM25].unit, json_string_value(unit), UNIT_MAX);
-        }
-        else if (strcmp(parameter_string, "pm10") == 0)
-        {
-            target->measurements_array[i].substances[PARAM_PM10].value = val;
-            target->measurements_array[i].substances[PARAM_PM10].timestamp = string_to_timestamp(json_string_value(date_utc));
-            strcpy_s(target->measurements_array[i].substances[PARAM_PM10].unit, json_string_value(unit), UNIT_MAX);
-        }
-        else if (strcmp(parameter_string, "o3") == 0)
-        {
-            target->measurements_array[i].substances[PARAM_O3].value = val;
-            target->measurements_array[i].substances[PARAM_O3].timestamp = string_to_timestamp(json_string_value(date_utc));
-            strcpy_s(target->measurements_array[i].substances[PARAM_O3].unit, json_string_value(unit), UNIT_MAX);
-        }
-        else if (strcmp(parameter_string, "so2") == 0)
-        {
-            target->measurements_array[i].substances[PARAM_SO2].value = val;
-            target->measurements_array[i].substances[PARAM_SO2].timestamp = string_to_timestamp(json_string_value(date_utc));
-            strcpy_s(target->measurements_array[i].substances[PARAM_SO2].unit, json_string_value(unit), UNIT_MAX);
-        }
-        else if (strcmp(parameter_string, "no2") == 0)
-        {
-            target->measurements_array[i].substances[PARAM_NO2].value = val;
-            target->measurements_array[i].substances[PARAM_NO2].timestamp = string_to_timestamp(json_string_value(date_utc));
-            strcpy_s(target->measurements_array[i].substances[PARAM_NO2].unit, json_string_value(unit), UNIT_MAX);
-        }
-        else if (strcmp(parameter_string, "co") == 0)
-        {
-            target->measurements_array[i].substances[PARAM_CO].value = val;
-            target->measurements_array[i].substances[PARAM_CO].timestamp = string_to_timestamp(json_string_value(date_utc));
-            strcpy_s(target->measurements_array[i].substances[PARAM_CO].unit, json_string_value(unit), UNIT_MAX);
-        }
-        else if (strcmp(parameter_string, "bc") == 0)
-        {
-            target->measurements_array[i].substances[PARAM_BC].value = val;
-            target->measurements_array[i].substances[PARAM_BC].timestamp = string_to_timestamp(json_string_value(date_utc));
-            strcpy_s(target->measurements_array[i].substances[PARAM_BC].unit, json_string_value(unit), UNIT_MAX);
+            target->measurements_array[i].substances[parameter_id].value = val;
+            target->measurements_array[i].substances[parameter_id].timestamp = string_to_timestamp(json_string_value(date_utc));
+            strcpy_s(target->measurements_array[i].substances[parameter_id].unit, json_string_value(unit), UNIT_MAX);
         }
         else
             printf("Unknown parameter: %s. Ignoring.\n", parameter_string);
@@ -133,6 +97,7 @@ void json_extract_latest(const char *raw_data, measurements_t *target)
 {
     double val;
     int array_size;
+    parameter_t parameter_id;
     const char *parameter_string;
     
     json_t *root, *results, *entry, *location, *measurements, *coordinates, *latitude, 
@@ -193,53 +158,17 @@ void json_extract_latest(const char *raw_data, measurements_t *target)
             if (val < 0 || !json_is_number(json_value) || !json_is_string(unit) || !json_is_string(date) || !json_is_string(parameter))
                 continue;
 
-            parameter_string = json_string_value(parameter);   
-
-            if (strcmp(parameter_string, "pm25") == 0)
+            parameter_string = json_string_value(parameter);  
+            parameter_id = string_to_param(parameter_string);
+            if (parameter_id != PARAM_INVALID)
             {
-                target->measurements_array[i].substances[PARAM_PM25].value = val;
-                target->measurements_array[i].substances[PARAM_PM25].timestamp = string_to_timestamp(json_string_value(date));
-                strcpy_s(target->measurements_array[i].substances[PARAM_PM25].unit, json_string_value(unit), UNIT_MAX);
-            }
-            else if (strcmp(parameter_string, "pm10") == 0)
-            {
-                target->measurements_array[i].substances[PARAM_PM10].value = val;
-                target->measurements_array[i].substances[PARAM_PM10].timestamp = string_to_timestamp(json_string_value(date));
-                strcpy_s(target->measurements_array[i].substances[PARAM_PM10].unit, json_string_value(unit), UNIT_MAX);
-            }
-            else if (strcmp(parameter_string, "o3") == 0)
-            {
-                target->measurements_array[i].substances[PARAM_O3].value = val;
-                target->measurements_array[i].substances[PARAM_O3].timestamp = string_to_timestamp(json_string_value(date));
-                strcpy_s(target->measurements_array[i].substances[PARAM_O3].unit, json_string_value(unit), UNIT_MAX);
-            }
-            else if (strcmp(parameter_string, "so2") == 0)
-            {
-                target->measurements_array[i].substances[PARAM_SO2].value = val;
-                target->measurements_array[i].substances[PARAM_SO2].timestamp = string_to_timestamp(json_string_value(date));
-                strcpy_s(target->measurements_array[i].substances[PARAM_SO2].unit, json_string_value(unit), UNIT_MAX);
-            }
-            else if (strcmp(parameter_string, "no2") == 0)
-            {
-                target->measurements_array[i].substances[PARAM_NO2].value = val;
-                target->measurements_array[i].substances[PARAM_NO2].timestamp = string_to_timestamp(json_string_value(date));
-                strcpy_s(target->measurements_array[i].substances[PARAM_NO2].unit, json_string_value(unit), UNIT_MAX);
-            }
-            else if (strcmp(parameter_string, "co") == 0)
-            {
-                target->measurements_array[i].substances[PARAM_CO].value = val;
-                target->measurements_array[i].substances[PARAM_CO].timestamp = string_to_timestamp(json_string_value(date));
-                strcpy_s(target->measurements_array[i].substances[PARAM_CO].unit, json_string_value(unit), UNIT_MAX);
-            }
-            else if (strcmp(parameter_string, "bc") == 0)
-            {
-                target->measurements_array[i].substances[PARAM_BC].value = val;
-                target->measurements_array[i].substances[PARAM_BC].timestamp = string_to_timestamp(json_string_value(date));
-                strcpy_s(target->measurements_array[i].substances[PARAM_BC].unit, json_string_value(unit), UNIT_MAX);
+                target->measurements_array[i].substances[parameter_id].value = val;
+                target->measurements_array[i].substances[parameter_id].timestamp = string_to_timestamp(json_string_value(date));
+                strcpy_s(target->measurements_array[i].substances[parameter_id].unit, json_string_value(unit), UNIT_MAX);
             }
             else
                 printf("Unknown parameter: %s. Ignoring.\n", parameter_string);
-        }
+            }
     }
 
     json_decref(root);

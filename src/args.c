@@ -21,8 +21,8 @@ const char *HELP_STRING =   "\n[+] OpenAQ_CLI\n\n"
                             "  %s -gy IE\n"
                             "  %s -gc Rotterdam -w amsterdam_latest.csv\n"
                             "  %s -gc London -f 01/01/2019 -t 03/01/2019 -w london_threedays.csv\n"                           
-                            "  %s -h PM10 -y GB\n"
-                            "  %s -h PM25 -c London -f 01/03/2019 -t 04/03/2019 -w london_pm25_highest.csv\n\n"
+                            "  %s -h pm10 -y GB\n"
+                            "  %s -h pm25 -c London -f 01/03/2019 -t 04/03/2019 -w london_pm25_highest.csv\n\n"
                             "* Note: use quotation marks around cities or locations comprising multiple words, e.g. \"Dublin City\".\n\n";
 
 void print_info(char *program_name)

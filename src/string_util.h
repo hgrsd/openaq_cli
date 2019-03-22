@@ -8,3 +8,6 @@
 
 // Copies at most `dest_size` bytes from `src` into `dest`.
 int strcpy_s(char *dest, const char *src, size_t dest_size);
+
+// Lowercases a string in-place
+void str_tolower(char *string);

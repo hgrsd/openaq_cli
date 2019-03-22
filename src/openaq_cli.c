@@ -5,6 +5,7 @@
 
 #include "args.h"
 #include "core.h"
+#include "string_util.h"
 
 int main(int argc, char *argv[])
 {   
@@ -60,6 +61,7 @@ int main(int argc, char *argv[])
             case 'h':
                 highest_flag = 1;
                 highest_parameter = optarg;
+                str_tolower(highest_parameter);
                 break;
 
             case 'g':
