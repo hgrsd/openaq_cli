@@ -69,23 +69,22 @@ void TEST_json_extract_locations(void)
     assert(locations_data.size == 5);
     assert(strcmp(locations_data.locations_array[0].name, " 淮河道") == 0);
     assert(strcmp(locations_data.locations_array[0].city, "天津市") == 0);
-    assert(locations_data.locations_array[0].has_o3 == 1);
-    assert(locations_data.locations_array[0].has_pm25 == 1);
-    assert(locations_data.locations_array[0].has_pm10 == 1);
-    assert(locations_data.locations_array[0].has_no2 == 1);
-    assert(locations_data.locations_array[0].has_so2 == 1);
-    assert(locations_data.locations_array[0].has_co == 1);
-    assert(locations_data.locations_array[0].has_bc == 0);
+    assert(locations_data.locations_array[0].parameters[PARAM_O3] == 1);
+    assert(locations_data.locations_array[0].parameters[PARAM_PM25] == 1);
+    assert(locations_data.locations_array[0].parameters[PARAM_PM10] == 1);
+    assert(locations_data.locations_array[0].parameters[PARAM_NO2] == 1);
+    assert(locations_data.locations_array[0].parameters[PARAM_SO2] == 1);
+    assert(locations_data.locations_array[0].parameters[PARAM_CO] == 1);
+    assert(locations_data.locations_array[0].parameters[PARAM_BC] == 0);
     assert(strcmp(locations_data.locations_array[1].name, "(Folkungagatan tillfälligt avstängd)") == 0);
     assert(strcmp(locations_data.locations_array[1].country_code, "SE") == 0);
-    assert(locations_data.locations_array[1].has_pm25 == 0);
-    assert(locations_data.locations_array[1].has_co == 0);
-    assert(locations_data.locations_array[1].has_o3 == 0);
-    assert(locations_data.locations_array[1].has_co == 0);
-    assert(locations_data.locations_array[1].has_so2 == 0);
-    assert(locations_data.locations_array[1].has_bc == 0);
-    assert(locations_data.locations_array[1].has_pm10 == 1);
-    assert(locations_data.locations_array[1].has_no2 == 1);
+    assert(locations_data.locations_array[1].parameters[PARAM_PM25] == 0);
+    assert(locations_data.locations_array[1].parameters[PARAM_CO] == 0);
+    assert(locations_data.locations_array[1].parameters[PARAM_O3] == 0);
+    assert(locations_data.locations_array[1].parameters[PARAM_SO2] == 0);
+    assert(locations_data.locations_array[1].parameters[PARAM_BC] == 0);
+    assert(locations_data.locations_array[1].parameters[PARAM_PM10] == 1);
+    assert(locations_data.locations_array[1].parameters[PARAM_NO2] == 1);
     assert(locations_data.locations_array[4].latitude == 41.32247);
     assert(locations_data.locations_array[4].longitude == -95.93799);
 
@@ -244,15 +243,9 @@ void TEST_data_init_locations()
     {
         assert(strcmp(locations_data.locations_array[i].name, "\0") == 0);
         assert(strcmp(locations_data.locations_array[i].country_code, "\0") == 0);
-        assert(locations_data.locations_array[i].has_bc == 0);
-        assert(locations_data.locations_array[i].has_co == 0);
-        assert(locations_data.locations_array[i].has_no2 == 0);
-        assert(locations_data.locations_array[i].has_o3 == 0);
-        assert(locations_data.locations_array[i].has_pm10 == 0);
-        assert(locations_data.locations_array[i].has_pm25 == 0);
-        assert(locations_data.locations_array[i].has_so2 == 0);
+        for (parameter_t param; param < N_PARAMETERS; param++)
+            assert(locations_data.locations_array[i].parameters[param] == 0);
     }
-
     printf("    [PASS]\n\n");
 }
 

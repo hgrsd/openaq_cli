@@ -59,20 +59,11 @@ static void print_location(location_t *source)
     printf("    * Latitude:\t\t\t%f\n", source->latitude);
     printf("    * Longitude:\t\t%f\n", source->longitude);
     printf("    * Available parameters:\n        ");
-    if (source->has_pm25 == 1)
-        printf("PM25 ");
-    if (source->has_pm10 == 1)
-        printf("PM10 ");
-    if (source->has_bc == 1)
-        printf("BC ");
-    if (source->has_no2 == 1)
-        printf("NO2 ");
-    if (source->has_so2 == 1)
-        printf("SO2 ");
-    if (source->has_o3 == 1)
-        printf("O3 ");
-    if (source->has_co == 1)
-        printf("CO ");
+    for (parameter_t param = PARAM_PM25; param < N_PARAMETERS; param++)
+    {
+        if(source->parameters[param] == 1)
+            printf("%s ", parameter_names[param]);
+    }
     printf("\n\n"); 
 }
 
@@ -100,14 +91,14 @@ static void print_measurement(measurement_t *measurement)
     printf("    * Location: \t\t%s\n", measurement->location);
     printf("    * Latitude:\t\t\t%f\n", measurement->latitude);
     printf("    * Longitude:\t\t%f\n", measurement->longitude);
-    for (int i = 0; i < N_PARAMETERS; i++)
+    for (parameter_t param = PARAM_PM25; param < N_PARAMETERS; param++)    
     {
-        if (measurement->substances[i].value != -1)
+        if (measurement->substances[param].value != -1)
         {
-            print_value(labels[i], 
-                        measurement->substances[i].value,
-                        measurement->substances[i].unit,
-                        measurement->substances[i].timestamp);
+            print_value(labels[param], 
+                        measurement->substances[param].value,
+                        measurement->substances[param].unit,
+                        measurement->substances[param].timestamp);
         }
     }   
     printf("\n");
@@ -132,19 +123,12 @@ static void write_country(country_t *source, FILE *fp)
 
 static void write_location(location_t *source, FILE *fp)
 {
-    fprintf(fp, "%s,%s,%s,%f,%f,%d,%d,%d,%d,%d,%d,%d\n",
-                source->country_code,
-                source->city,
-                source->name,
-                source->latitude,
-                source->longitude,
-                source->has_pm25,
-                source->has_pm10,
-                source->has_o3,
-                source->has_so2,
-                source->has_no2,
-                source->has_co,
-                source->has_bc);   
+    fprintf(fp, "%s,%s,%s,%f,%f");
+    for (parameter_t param = PARAM_PM25; param < N_PARAMETERS; param++)
+    {
+        fprintf(fp, ",%d", source->parameters[param] == 1 ? 1 : 0);
+    }
+    fprintf(fp, "\n"); 
 }
 
 static void write_measurement(measurement_t *measurement, FILE *fp)
@@ -154,11 +138,10 @@ static void write_measurement(measurement_t *measurement, FILE *fp)
                                   measurement->location,
                                   measurement->latitude,
                                   measurement->longitude);
-    for (int i = 0; i < N_PARAMETERS; i++)
-    {
-        fprintf(fp, ",%f,%s,%ld", measurement->substances[i].value,
-                                  measurement->substances[i].unit,
-                                  measurement->substances[i].timestamp); 
+    for (parameter_t param = PARAM_PM25; param < N_PARAMETERS; param++)    {
+        fprintf(fp, ",%f,%s,%ld", measurement->substances[param].value,
+                                  measurement->substances[param].unit,
+                                  measurement->substances[param].timestamp); 
     }
     fprintf(fp, "\n");
 }
@@ -208,9 +191,18 @@ void print_measurements(measurements_t *source)
     }
 
     for (int i = 0; i < source->size; i++)
-    {
-        printf("[+] Record #%d\n\n", i + 1);
-        print_measurement(source->measurements_array + i);
+    {   
+        printf("[+] Record #%d\n", i + 1);
+        if (source->measurements_array[i].valid_data == 1)
+        {
+            printf("\n");
+            print_measurement(source->measurements_array + i);
+        }
+        else
+        {
+            printf("    * Invalid data.\n\n");
+        }
+        
     }
 }
 
@@ -342,17 +334,17 @@ int write_measurements(measurements_t *source, const char *filename)
         if (strcmp(mode, "w") == 0)
         {
             fprintf(fp, "country_code,city,location,latitude,longitude");
-            for (int i = 0; i < N_PARAMETERS; i++)
+            for (parameter_t param = PARAM_PM25; param < N_PARAMETERS; param++)
             {
-                fprintf(fp, ",%s,%s%s,%s%s", parameter_names[i],
-                                         parameter_names[i], "_unit",
-                                         parameter_names[i], "_timestamp");
+                fprintf(fp, ",%s,%s%s,%s%s", parameter_names[param],
+                                             parameter_names[param], "_unit",
+                                             parameter_names[param], "_timestamp");
             }
             fprintf(fp, "\n");
         }
         for (int i = 0; i < source->size; i++)
         {
-            if (strcmp(source->measurements_array[i].location, "\0") != 0)
+            if (source->measurements_array[i].valid_data == 1)
             {
                 write_measurement(source->measurements_array + i, fp);
                 lines = lines + 1;

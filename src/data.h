@@ -75,15 +75,9 @@ typedef struct _location_t
     char name[LOCATION_MAX];
     char city[CITY_MAX];
     char country_code[COUNTRY_CODE_MAX];
+    int parameters[N_PARAMETERS];
     double latitude;
     double longitude;
-    int has_pm25;
-    int has_pm10;
-    int has_o3;
-    int has_so2;
-    int has_no2;
-    int has_co;
-    int has_bc;
 } location_t;
 
 // holds a series of locations
@@ -107,6 +101,7 @@ typedef struct _measurement_t
     char country_code[COUNTRY_CODE_MAX];
     char city[CITY_MAX];
     char location[LOCATION_MAX];
+    int valid_data;
     double latitude;
     double longitude;
 } measurement_t;

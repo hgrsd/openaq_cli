@@ -88,7 +88,8 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
         }
         else
             printf("Unknown parameter: %s. Ignoring.\n", parameter_string);
-    }
+        target->measurements_array[i].valid_data = 1;
+    }   
 
     json_decref(root);
 }
@@ -168,7 +169,8 @@ void json_extract_latest(const char *raw_data, measurements_t *target)
             }
             else
                 printf("Unknown parameter: %s. Ignoring.\n", parameter_string);
-            }
+        }
+        target->measurements_array[i].valid_data = 1;
     }
 
     json_decref(root);
@@ -265,20 +267,7 @@ void json_extract_locations(const char *raw_data, locations_t *target)
         {
             parameter = json_array_get(parameters, j);
             parameter_string = json_string_value(parameter);
-            if (strcmp(parameter_string, "pm25") == 0)
-                target->locations_array[i].has_pm25 = 1;
-            else if (strcmp(parameter_string, "pm10") == 0)
-                target->locations_array[i].has_pm10 = 1;
-            else if (strcmp(parameter_string, "o3") == 0)
-                target->locations_array[i].has_o3 = 1;
-            else if (strcmp(parameter_string, "so2") == 0)
-                target->locations_array[i].has_so2 = 1;
-            else if (strcmp(parameter_string, "no2") == 0)
-                target->locations_array[i].has_no2 = 1;
-            else if (strcmp(parameter_string, "co") == 0)
-                target->locations_array[i].has_co = 1;
-            else if (strcmp(parameter_string, "bc") == 0)
-                target->locations_array[i].has_bc = 1;
+            target->locations_array[i].parameters[string_to_param(parameter_string)] = 1;
         }        
     }
 

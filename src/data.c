@@ -67,6 +67,7 @@ void init_measurements(measurements_t *target, int nmemb)
         strcpy(target->measurements_array[i].country_code, "\0");
         target->measurements_array[i].latitude = 0;
         target->measurements_array[i].longitude = 0;
+        target->measurements_array[i].valid_data = 0;
         for (int j = 0; j < N_PARAMETERS; j++)
         {
             target->measurements_array[i].substances[j].timestamp = -1;
@@ -106,13 +107,8 @@ void init_locations(locations_t *target, int nmemb)
     {
         strcpy(target->locations_array[i].name, "\0");
         strcpy(target->locations_array[i].country_code, "\0");
-        target->locations_array[i].has_pm25 = 0;
-        target->locations_array[i].has_pm10 = 0;
-        target->locations_array[i].has_bc = 0;
-        target->locations_array[i].has_no2 = 0;
-        target->locations_array[i].has_so2 = 0;
-        target->locations_array[i].has_o3 = 0;
-        target->locations_array[i].has_co = 0;
+        for (int j = 0; j < N_PARAMETERS; j++)
+            target->locations_array[i].parameters[i] = 0;
         target->locations_array[i].latitude = 0;
         target->locations_array[i].longitude = 0;
     }
