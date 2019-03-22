@@ -1,6 +1,7 @@
-include_directories({OpenAQ_CLI_SOURCE_DIR}/src)
-
 add_executable(openaq_test tests.c)
+
+target_include_directories(openaq_test PRIVATE "../src")
+
 
 target_link_libraries (openaq_test
 						curl

@@ -4,9 +4,9 @@
 
 #include "tests.h"
 
-#include "../src/core.h"
-#include "../src/data.h"
-#include "../src/json.h"
+#include <core.h>
+#include <data.h>
+#include <json.h>
 
 /*
 TODO: Add test for json_extract_measurements_range()
