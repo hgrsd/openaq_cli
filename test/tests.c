@@ -21,18 +21,18 @@ void TEST_data_find_highest(void)
 
     json_extract_latest(JSON_LATEST_TEST, &measurements_data);
 
-    highest = find_highest(&measurements_data, string_to_param("PM25"));
+    highest = find_highest(&measurements_data, string_to_param("pm25"));
     assert(highest->substances[PARAM_PM25].value == 70);
     
-    highest = find_highest(&measurements_data, string_to_param("BC"));
+    highest = find_highest(&measurements_data, string_to_param("bc"));
     assert(highest == NULL);
 
     json_extract_latest(JSON_LATEST_TEST_EMPTY, &measurements_data);
-    highest = find_highest(&measurements_data, string_to_param("CO"));
+    highest = find_highest(&measurements_data, string_to_param("co"));
     assert(highest->substances[PARAM_CO].value == 2);
 
     json_extract_latest(JSON_LATEST_TEST_MALFORMED, &measurements_data);
-    highest = find_highest(&measurements_data, string_to_param("PM25"));
+    highest = find_highest(&measurements_data, string_to_param("pm25"));
     assert(highest == NULL);
 
     printf("    [PASS]\n\n");
@@ -180,19 +180,19 @@ void TEST_data_string_to_param(void)
 
     printf("[+] Testing string_to_param()\n");
 
-    return_value = string_to_param("PM25");
+    return_value = string_to_param("pm25");
     assert(return_value == PARAM_PM25);
-    return_value = string_to_param("PM10");
+    return_value = string_to_param("pm10");
     assert(return_value == PARAM_PM10);
-    return_value = string_to_param("NO2");
+    return_value = string_to_param("no2");
     assert(return_value == PARAM_NO2);
-    return_value = string_to_param("CO");
+    return_value = string_to_param("co");
     assert(return_value == PARAM_CO);
-    return_value = string_to_param("BC");
+    return_value = string_to_param("bc");
     assert(return_value == PARAM_BC);
-    return_value = string_to_param("O3");
+    return_value = string_to_param("o3");
     assert(return_value == PARAM_O3);
-    return_value = string_to_param("SO2");
+    return_value = string_to_param("so2");
     assert(return_value == PARAM_SO2);
     return_value = string_to_param("THISISWRONG");
     assert(return_value == PARAM_INVALID);  
