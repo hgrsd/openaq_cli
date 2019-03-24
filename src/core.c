@@ -173,7 +173,13 @@ void highest_range(request_type_t type, const char *argument, const char *parame
     response_data_t raw_data;
     measurements_t measurements_data = {NULL, 0};
     measurements_t highest = {NULL, 0};
-  
+    parameter_t param;
+
+    if ((param = string_to_param(parameter)) == PARAM_INVALID)
+    {
+        printf("    * Invalid parameter, aborting.\n     -> Valid parameters are pm25, pm10, no2, co, bc, o3, so2\n");
+        return;
+    }
     init_data(&raw_data);
 
     if (date_from && date_to)
@@ -225,7 +231,10 @@ void highest_range(request_type_t type, const char *argument, const char *parame
         }
     }
     else
+    {
         printf("    * highest not found.\n");
+        printf("      -> valid parameters are pm25, pm10, no2, co, bc, o3, so2\n");
+    }
 
     clear_data(&raw_data);
     free(measurements_data.measurements_array);
@@ -238,6 +247,13 @@ void highest(request_type_t type, const char *argument, const char *parameter, p
     response_data_t raw_data;
     measurements_t measurements_data = {NULL, 0};
     measurements_t highest = {NULL, 0};
+    parameter_t param;
+
+    if ((param = string_to_param(parameter)) == PARAM_INVALID)
+    {
+        printf("    * Invalid parameter, aborting.\n     -> Valid parameters are pm25, pm10, no2, co, bc, o3, so2\n");
+        return;
+    }
 
     init_data(&raw_data);
     api_fetch_latest(type, argument, &raw_data);
@@ -260,7 +276,9 @@ void highest(request_type_t type, const char *argument, const char *parameter, p
         }
     }
     else
+    {
         printf("    * highest not found.\n");
+    }
 
     clear_data(&raw_data);
     free(measurements_data.measurements_array);

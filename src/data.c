@@ -162,15 +162,11 @@ measurement_t *find_highest(measurements_t *measurements_data, parameter_t param
     size_t offset = offsets[parameter];
     measurement_t *highest = NULL;
         
-    if (offset == 0)
+    if (offset == 0 || measurements_data->size == 0)
     {
-        printf("Invalid parameter. Valid parameters are: pm25, pm10, no2, co, bc, o3, so2.\n");
         return NULL;
     }
 
-    if (measurements_data->size == 0)
-        return NULL;
-    
     for (int i = 0; i < measurements_data->size; i++)
     {
         base = measurements_data->measurements_array + i;
