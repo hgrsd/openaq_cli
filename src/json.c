@@ -30,27 +30,28 @@ void json_extract_measurements(const char *raw_data, measurements_t *target)
             *country_code, *city, *parameter, *date, *date_utc, *json_value, *unit;
     json_error_t error; 
  
-    if (target->measurements_array != NULL)
-    {
-        target->size = 0;
-        free(target->measurements_array);
-        target->measurements_array = NULL;
-    }
-   
     root = json_loads(raw_data, 0, &error);
-    if (!strcmp(error.text, "\0") == 0)
+    if (strcmp(error.text, "\0") != 0)
     {
         json_decref(root);
+        target->size = 0;
+        printf("Error: %s\n", error.text);
         return;
     }
 
     if ((results = get_results(raw_data, root)) == NULL)
     {
+        target->size = 0;
+        json_decref(root);
         return;
     }
     array_size = json_array_size(results);   
-    target->measurements_array = (measurement_t *) malloc(sizeof(measurement_t) * array_size);
     init_measurements(target, array_size);
+    if (target->measurements_array == NULL)
+    {
+        puts("Error allocating memory.");
+        return;
+    }
     for (int i = 0; i < array_size; i++)
     {
         entry = json_array_get(results, i);
@@ -105,26 +106,27 @@ void json_extract_latest(const char *raw_data, measurements_t *target)
             *longitude, *country_code, *city, *measurement_line, *parameter, *date, *json_value, *unit, *source_name;
     json_error_t error; 
  
-    if (target->measurements_array != NULL)
+    root = json_loads(raw_data, 0, &error);
+    if (strcmp(error.text, "\0") != 0)
+    {
+        json_decref(root);
+        target->size = 0;
+        printf("Error: %s\n", error.text);
+        return;
+    }
+    if ((results = get_results(raw_data, root)) == NULL)
     {
         target->size = 0;
-        free(target->measurements_array);
-        target->measurements_array = NULL;
-    }
-   
-    root = json_loads(raw_data, 0, &error);
-    if (!strcmp(error.text, "\0") == 0)
-    {
         json_decref(root);
         return;
     }
-
-    if ((results = get_results(raw_data, root)) == NULL)
-        return;
-
     array_size = json_array_size(results);   
-    target->measurements_array = (measurement_t *) malloc(sizeof(measurement_t) * array_size);
     init_measurements(target, array_size);
+    if (target->measurements_array == NULL)
+    {
+        puts("Error allocating memory.");
+        return;
+    }
     for (int i = 0; i < array_size; i++)
     {
         entry = json_array_get(results, i);
@@ -183,26 +185,27 @@ void json_extract_cities(const char *raw_data, cities_t *target)
     json_t *root, *results, *entry, *city, *locations, *country_code;
     json_error_t error;
    
-    if (target->cities_array != NULL)
+    root = json_loads(raw_data, 0, &error);
+    if (strcmp(error.text, "\0") != 0)
+    {
+        json_decref(root);
+        target->size = 0;
+        printf("Error: %s\n", error.text);
+        return;
+    }
+    if ((results = get_results(raw_data, root)) == NULL)
     {
         target->size = 0;
-        free(target->cities_array);
-        target->cities_array = NULL;
-    }
-   
-    root = json_loads(raw_data, 0, &error);
-    if (!strcmp(error.text, "\0") == 0)
-    {
         json_decref(root);
         return;
     }
-
-    if ((results = get_results(raw_data, root)) == NULL)
-        return;
-    
-    array_size = json_array_size(results);
-    target->cities_array = (city_t *) malloc(sizeof(city_t) * array_size);
+    array_size = json_array_size(results);   
     init_cities(target, array_size);
+    if (target->cities_array == NULL)
+    {
+        puts("Error allocating memory.");
+        return;
+    }
     
     for (int i = 0; i < json_array_size(results); i++)
     {
@@ -226,28 +229,28 @@ void json_extract_locations(const char *raw_data, locations_t *target)
     json_t *root, *results, *entry, *location, *parameters, *parameter, *coordinates, *latitude, *longitude, *country_code, *city;
     json_error_t error;
 
-    if (target->locations_array != NULL)
+    root = json_loads(raw_data, 0, &error);
+    if (strcmp(error.text, "\0") != 0)
+    {
+        json_decref(root);
+        target->size = 0;
+        printf("Error: %s\n", error.text);
+        return;
+    }
+    if ((results = get_results(raw_data, root)) == NULL)
     {
         target->size = 0;
-        free(target->locations_array);
-        target->locations_array = NULL;
-    }
-
-    root = json_loads(raw_data, 0, &error);
-    if (!strcmp(error.text, "\0") == 0)
-    {
         json_decref(root);
         return;
     }
-
-    if ((results = get_results(raw_data, root)) == NULL)
-        return;
-    
-    array_size = json_array_size(results);
-
-    target->locations_array = (location_t *) malloc(sizeof(location_t) * array_size);
+    array_size = json_array_size(results);   
     init_locations(target, array_size);
-   
+    printf("Array size: %d\n", array_size);
+    if (target->locations_array == NULL)
+    {
+        puts("Error allocating memory.");
+        return;
+    }
     for (int i = 0; i < json_array_size(results); i++)
     {
         entry = json_array_get(results, i);
@@ -281,28 +284,27 @@ void json_extract_countries(const char *raw_data, countries_t *target)
     json_t *root, *results, *entry, *country, *country_code, *cities, *locations;
     json_error_t error;
 
-    if (target->countries_array != NULL)
+    root = json_loads(raw_data, 0, &error);
+    if (strcmp(error.text, "\0") != 0)
+    {
+        json_decref(root);
+        target->size = 0;
+        printf("Error: %s\n", error.text);
+        return;
+    }
+    if ((results = get_results(raw_data, root)) == NULL)
     {
         target->size = 0;
-        free(target->countries_array);
-        target->countries_array = NULL;
-    }
-    
-    root = json_loads(raw_data, 0, &error);
-    if (!strcmp(error.text, "\0") == 0)
-    {
         json_decref(root);
         return;
     }
-
-    if ((results = get_results(raw_data, root)) == NULL)
-        return;
-    
-    array_size = json_array_size(results);
-
-    target->countries_array = (country_t *) malloc(sizeof(country_t) * array_size);
+    array_size = json_array_size(results);   
     init_countries(target, array_size);
-
+    if (target->countries_array == NULL)
+    {
+        puts("Error allocating memory.");
+        return;
+    }
     for (int i = 0; i < json_array_size(results); i++)
     {
         entry = json_array_get(results, i);

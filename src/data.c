@@ -58,59 +58,99 @@ void init_data(response_data_t *data)
 }
 
 void init_measurements(measurements_t *target, int nmemb)
-{
-    target->size = nmemb;
-    for (int i = 0; i < nmemb; i++)
+{   
+    if (target->measurements_array != NULL)
     {
-        strcpy(target->measurements_array[i].location, "\0");
-        strcpy(target->measurements_array[i].city, "\0");
-        strcpy(target->measurements_array[i].country_code, "\0");
-        target->measurements_array[i].latitude = 0;
-        target->measurements_array[i].longitude = 0;
-        target->measurements_array[i].valid_data = 0;
-        for (int j = 0; j < N_PARAMETERS; j++)
+        target->size = 0;
+        free(target->measurements_array);
+        target->measurements_array = NULL;
+    }
+    target->measurements_array = (measurement_t *) malloc(sizeof(measurement_t) * nmemb);
+    if (target->measurements_array != NULL)
+    {
+        target->size = nmemb;
+        for (int i = 0; i < nmemb; i++)
         {
-            target->measurements_array[i].substances[j].timestamp = -1;
-            target->measurements_array[i].substances[j].value = -1;
-            strcpy(target->measurements_array[i].substances[j].unit, "\0");
+            strcpy(target->measurements_array[i].location, "\0");
+            strcpy(target->measurements_array[i].city, "\0");
+            strcpy(target->measurements_array[i].country_code, "\0");
+            target->measurements_array[i].latitude = 0;
+            target->measurements_array[i].longitude = 0;
+            target->measurements_array[i].valid_data = 0;
+            for (int j = 0; j < N_PARAMETERS; j++)
+            {
+                target->measurements_array[i].substances[j].timestamp = -1;
+                target->measurements_array[i].substances[j].value = -1;
+                strcpy(target->measurements_array[i].substances[j].unit, "\0");
+            }
         }
     }
 }
 
 void init_countries(countries_t *target, int nmemb)
 {
-    target->size = nmemb;
-    for (int i = 0; i < nmemb; i++)
+    if (target->countries_array != NULL)
     {
-        strcpy(target->countries_array[i].name, "\0");
-        strcpy(target->countries_array[i].country_code, "\0");
-        target->countries_array[i].n_cities = 0;
-        target->countries_array[i].n_locations = 0;
+        free(target->countries_array);
+        target->size = 0;
+        target->countries_array = NULL;
+    }
+    target->countries_array = (country_t *) malloc(sizeof(country_t) * nmemb);
+    if (target->countries_array != NULL)
+    {
+        target->size = nmemb;
+        for (int i = 0; i < nmemb; i++)
+        {
+            strcpy(target->countries_array[i].name, "\0");
+            strcpy(target->countries_array[i].country_code, "\0");
+            target->countries_array[i].n_cities = 0;
+            target->countries_array[i].n_locations = 0;
+        }
     }
 }
 
 void init_cities(cities_t *target, int nmemb)
 {
-    target->size = nmemb;
-    for (int i = 0; i < nmemb; i++)
+    if (target->cities_array != NULL)
     {
-        strcpy(target->cities_array[i].name, "\0");
-        strcpy(target->cities_array[i].country_code, "\0");
-        target->cities_array[i].n_locations = 0;
+        free(target->cities_array);
+        target->size = 0;
+        target->cities_array = NULL;
+    }
+    target->cities_array = (city_t *) malloc(sizeof(city_t) * nmemb);
+    if (target->cities_array != NULL)
+    {
+        target->size = nmemb;
+        for (int i = 0; i < nmemb; i++)
+        {
+            strcpy(target->cities_array[i].name, "\0");
+            strcpy(target->cities_array[i].country_code, "\0");
+            target->cities_array[i].n_locations = 0;
+        }
     }
 }
 
 void init_locations(locations_t *target, int nmemb)
 {
-    target->size = nmemb;
-    for (int i = 0; i < nmemb; i++)
+    if (target->locations_array != NULL)
     {
-        strcpy(target->locations_array[i].name, "\0");
-        strcpy(target->locations_array[i].country_code, "\0");
-        for (int j = 0; j < N_PARAMETERS; j++)
-            target->locations_array[i].parameters[i] = 0;
-        target->locations_array[i].latitude = 0;
-        target->locations_array[i].longitude = 0;
+        free(target->locations_array);
+        target->size = 0;
+        target->locations_array = NULL;
+    }
+    target->locations_array = (location_t *) malloc(sizeof(location_t) * nmemb);
+    if (target->locations_array != NULL)
+    {
+        target->size = nmemb;
+        for (int i = 0; i < nmemb; i++)
+        {
+            strcpy(target->locations_array[i].name, "\0");
+            strcpy(target->locations_array[i].country_code, "\0");
+            for (int j = 0; j < N_PARAMETERS; j++)
+                target->locations_array[i].parameters[i] = 0;
+            target->locations_array[i].latitude = 0;
+            target->locations_array[i].longitude = 0;
+        }
     }
 }
 
