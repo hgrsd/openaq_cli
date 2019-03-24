@@ -6,6 +6,7 @@
 #include "core.h"
 
 #include "api_calls.h"
+#include "date_util.h"
 #include "data.h"
 #include "io.h"
 #include "json.h"
@@ -122,24 +123,20 @@ void date_range(request_type_t type, const char *argument, const char *date_from
     if (date_from && date_to)
     {
         // translate to US date style
-        sscanf(date_from, "%2d/%2d/%4d", &day, &month, &year);
-        snprintf(from_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
-        sscanf(date_to, "%2d/%2d/%4d", &day, &month, &year);
-        snprintf(to_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
+        date_convert_to_us(date_from, from_date_translated);
+        date_convert_to_us(date_to, to_date_translated);
         api_fetch_range(type, argument, from_date_translated, to_date_translated, &raw_data);
     }
     else if (date_from)
     {
         // translate to US date style
-        sscanf(date_from, "%2d/%2d/%4d", &day, &month, &year);
-        snprintf(from_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
+        date_convert_to_us(date_from, from_date_translated);
         api_fetch_range(type, argument, from_date_translated, NULL, &raw_data);
     }
     else if (date_to)
     {
         // translate to US date style
-        sscanf(date_to, "%2d/%2d/%4d", &day, &month, &year);
-        snprintf(to_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
+        date_convert_to_us(date_to, to_date_translated);
         api_fetch_range(type, argument, NULL, to_date_translated, &raw_data);
     }
     else
@@ -167,7 +164,6 @@ void date_range(request_type_t type, const char *argument, const char *date_from
 void highest_range(request_type_t type, const char *argument, const char *parameter, const char* date_from, const char* date_to, print_mode_t mode, const char *filename)
 {
     int lines_written;
-    int year, month, day;
     char from_date_translated[DATE_MAX], to_date_translated[DATE_MAX];
 
     response_data_t raw_data;
@@ -185,24 +181,20 @@ void highest_range(request_type_t type, const char *argument, const char *parame
     if (date_from && date_to)
     {
         // translate to US date style
-        sscanf(date_from, "%2d/%2d/%4d", &day, &month, &year);
-        snprintf(from_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
-        sscanf(date_to, "%2d/%2d/%4d", &day, &month, &year);
-        snprintf(to_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
+        date_convert_to_us(date_from, from_date_translated);
+        date_convert_to_us(date_to, to_date_translated);
         api_fetch_range(type, argument, from_date_translated, to_date_translated, &raw_data);
     }
     else if (date_from)
     {
         // translate to US date style
-        sscanf(date_from, "%2d/%2d/%4d", &day, &month, &year);
-        snprintf(from_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
+        date_convert_to_us(date_from, from_date_translated);
         api_fetch_range(type, argument, from_date_translated, NULL, &raw_data);
     }
     else if (date_to)
     {
         // translate to US date style
-        sscanf(date_to, "%2d/%2d/%4d", &day, &month, &year);
-        snprintf(to_date_translated, DATE_MAX - 1, "%d-%d-%d", year, month, day);
+        date_convert_to_us(date_to, to_date_translated);
         api_fetch_range(type, argument, NULL, to_date_translated, &raw_data);
     }
     else
@@ -214,7 +206,7 @@ void highest_range(request_type_t type, const char *argument, const char *parame
 
     json_extract_measurements(raw_data.data, &measurements_data);
 
-    highest.measurements_array = find_highest(&measurements_data, string_to_param(parameter));
+    highest.measurements_array = find_highest(&measurements_data, param);
     if (highest.measurements_array != NULL)
     {
         highest.size = 1;
@@ -259,7 +251,7 @@ void highest(request_type_t type, const char *argument, const char *parameter, p
     api_fetch_latest(type, argument, &raw_data);
     json_extract_latest(raw_data.data, &measurements_data);
 
-    highest.measurements_array = find_highest(&measurements_data, string_to_param(parameter));
+    highest.measurements_array = find_highest(&measurements_data, param);
     if (highest.measurements_array != NULL)
     {
         highest.size = 1;

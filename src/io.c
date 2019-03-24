@@ -138,11 +138,10 @@ static void write_measurement(measurement_t *measurement, FILE *fp)
                                   measurement->location,
                                   measurement->latitude,
                                   measurement->longitude);
-    for (parameter_t param = PARAM_PM25; param < N_PARAMETERS; param++)    {
+    for (parameter_t param = PARAM_PM25; param < N_PARAMETERS; param++)  
         fprintf(fp, ",%f,%s,%ld", measurement->substances[param].value,
                                   measurement->substances[param].unit,
                                   measurement->substances[param].timestamp); 
-    }
     fprintf(fp, "\n");
 }
 
