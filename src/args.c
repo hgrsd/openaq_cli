@@ -15,17 +15,17 @@ const char *HELP_STRING =   "\n[+] OpenAQ_CLI\n\n"
                             "  -f [dd/mm/yyyy]\t\t\t\t\tmeasurements from this date (inclusive) and/or\n"
                             "  -t [dd/mm/yyyy]\t\t\t\t\tmeasurements to this date (inclusive)\n\n"
                             "* Examples:\n\n"
-                            "  %s -y\n"
-                            "  %s -c NL\n"
-                            "  %s -l \"Dublin City\"\n"
-                            "  %s -gy IE\n"
-                            "  %s -gc Rotterdam -w amsterdam_latest.csv\n"
-                            "  %s -gc London -f 01/01/2019 -t 03/01/2019 -w london_threedays.csv\n"                           
-                            "  %s -h pm10 -y GB\n"
-                            "  %s -h pm25 -c London -f 01/03/2019 -t 04/03/2019 -w london_pm25_highest.csv\n\n"
+                            "  %1$s -y\n"
+                            "  %1$s -c NL\n"
+                            "  %1$s -l \"Dublin City\"\n"
+                            "  %1$s -gy IE\n"
+                            "  %1$s -gc Rotterdam -w amsterdam_latest.csv\n"
+                            "  %1$s -gc London -f 01/01/2019 -t 03/01/2019 -w london_threedays.csv\n"                           
+                            "  %1$s -h pm10 -y GB\n"
+                            "  %1$s -h pm25 -c London -f 01/03/2019 -t 04/03/2019 -w london_pm25_highest.csv\n\n"
                             "* Note: use quotation marks around cities or locations comprising multiple words, e.g. \"Dublin City\".\n\n";
 
 void print_info(char *program_name)
 {
-    printf(HELP_STRING, program_name, program_name, program_name, program_name, program_name, program_name, program_name, program_name);
+    printf(HELP_STRING, program_name);
 }
