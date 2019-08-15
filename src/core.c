@@ -14,7 +14,7 @@
 
 
 void all_countries(print_mode_t mode, const char *filename)
-{   
+{
     int lines_written;
 
     response_data_t raw_data;
@@ -23,7 +23,7 @@ void all_countries(print_mode_t mode, const char *filename)
     init_data(&raw_data);
     api_fetch_countries(&raw_data);
     json_extract_countries(raw_data.data, &countries_data);
-   
+
     if (mode == TO_CSV)
     {
         lines_written = write_countries(&countries_data, filename);
@@ -82,7 +82,6 @@ void locations_by_city(const char *city, print_mode_t mode, const char *filename
         print_locations(&locations_data);
 
     clear_data(&raw_data);
-    free(locations_data.locations_array);
 }
 
 void latest(request_type_t type, const char *argument, print_mode_t mode, const char *filename)
@@ -106,7 +105,6 @@ void latest(request_type_t type, const char *argument, print_mode_t mode, const 
         print_measurements(&measurements_data);
 
     clear_data(&raw_data);
-    free(measurements_data.measurements_array);
 }
 
 void date_range(request_type_t type, const char *argument, const char *date_from, const char *date_to, print_mode_t mode, const char *filename)
@@ -114,7 +112,7 @@ void date_range(request_type_t type, const char *argument, const char *date_from
     int lines_written;
     int year, month, day;
     char from_date_translated[DATE_MAX], to_date_translated[DATE_MAX];
-    
+
     response_data_t raw_data;
     measurements_t measurements_data = {NULL, 0};
 
@@ -158,7 +156,6 @@ void date_range(request_type_t type, const char *argument, const char *date_from
         print_measurements(&measurements_data);
 
     clear_data(&raw_data);
-    free(measurements_data.measurements_array);
 }
 
 void highest_range(request_type_t type, const char *argument, const char *parameter, const char* date_from, const char* date_to, print_mode_t mode, const char *filename)
@@ -229,7 +226,6 @@ void highest_range(request_type_t type, const char *argument, const char *parame
     }
 
     clear_data(&raw_data);
-    free(measurements_data.measurements_array);
 }
 
 void highest(request_type_t type, const char *argument, const char *parameter, print_mode_t mode, const char *filename)
@@ -273,5 +269,4 @@ void highest(request_type_t type, const char *argument, const char *parameter, p
     }
 
     clear_data(&raw_data);
-    free(measurements_data.measurements_array);
 }
